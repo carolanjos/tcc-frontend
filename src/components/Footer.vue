@@ -19,28 +19,12 @@
       </div>
 
       <div class="footer-section links">
-        <h2>Navegação Rápida</h2>
-        <br>
+        <h2 class="logo-text">Navegação Rápida</h2>
         <ul>
           <li><a href="#">Home</a></li>
-          <li><a href="#">Sobre</a></li>
-          <li><a href="#">Serviços</a></li>
+          <li><a href="#">Agendamento</a></li>
           <li><a href="#">Contato</a></li>
-          <li><a href="#">Blog</a></li>
         </ul>
-      </div>
-
-      <div class="footer-section contact-form">
-        <h2>Contato</h2>
-        <br>
-        <form action="#" method="post">
-          <input type="email" name="email" class="text-input contact-input" placeholder="Seu email...">
-          <textarea rows="4" name="message" class="text-input contact-input" placeholder="Sua mensagem..."></textarea>
-          <button type="submit" class="btn btn-big">
-            <i class="fas fa-envelope"></i>
-            Enviar
-          </button>
-        </form>
       </div>
     </div>
 
@@ -64,26 +48,25 @@ export default class Footer extends Vue {}
 .footer {
   background-color: #2EACB2;
   color: #fff;
-  padding: 2rem 0;
   font-family: 'Roboto', sans-serif;
 }
 
 .footer .footer-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 0.5rem;
 }
 
 .footer .footer-section {
-  flex: 1;
   padding: 1rem;
-  min-width: 250px;
+  min-width: 200px;
 }
 
 .footer .logo-text span {
-  color: #155872;
+  font-weight: bold;
 }
 
 .footer .contact span {
@@ -99,7 +82,7 @@ export default class Footer extends Vue {}
 }
 
 .footer .socials a:hover {
-  color: #4CAF50;
+  color: #2EACB2;
 }
 
 .footer .links ul {
@@ -113,24 +96,24 @@ export default class Footer extends Vue {}
   color: #fff;
   margin: 0.5rem 0;
   transition: color 0.3s;
+  border: 1px solid #fff;
+  text-align: center;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.logo-text {
+  font-size: 20px;
+  display: block;
+  margin: 0.5rem 0;
 }
 
 .footer .links ul a:hover {
-  color: #4CAF50;
-}
-
-.footer .contact-form .contact-input {
-  background-color: #444;
-  border: none;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  color: #fff;
-  width: 100%;
-  border-radius: 4px;
+  color: #2de6f0;
 }
 
 .footer .contact-form .btn {
-  background-color: #4CAF50;
+  background-color: #34d3db;
   color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -144,15 +127,15 @@ export default class Footer extends Vue {}
 }
 
 .footer .footer-bottom {
-  background-color: #222;
-  color: #aaa;
+  background-color: #2EACB2;
+  color: black;
   text-align: center;
-  padding: 1rem;
+  padding: 0.5rem;
   font-size: 0.875rem;
 }
 
 .footer .footer-bottom a {
-  color: #4CAF50;
+  color: #1ee9f0;
   text-decoration: none;
 }
 

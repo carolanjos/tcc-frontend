@@ -11,11 +11,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import NavBar from '../components/home/navbar-home.component.vue';
+import NavBar from '../components/NavBar.vue';
 import Banner from '../components/home/banner-home.component.vue';
 import Features from '../components/home/features-home.component.vue';
 import Testimonials from '../components/home/testimonials-home.component.vue';
-import Footer from '../components/home/footer.component.vue';
+import Footer from '../components/Footer.vue';
 
 @Component({
   components: {
