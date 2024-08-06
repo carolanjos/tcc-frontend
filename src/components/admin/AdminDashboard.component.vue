@@ -10,7 +10,7 @@
                 <v-card-text>
                   <v-subtitle class="dashboard-subtitle">Escolha a opção que deseja</v-subtitle>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="listarUsuarios">Listar usuários</v-btn>
-                    <v-btn block color="#2EACB2" class="dashboard-button" @click="consultarAgena">Consultar agenda</v-btn>
+                    <v-btn block color="#2EACB2" class="dashboard-button" @click="consultarAgenda">Consultar agenda</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="cadastrarUsuario">Cadastrar usuário</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="cadastrarMedico">Cadastrar médico</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="criarAgenda">Criar agenda</v-btn>
@@ -39,6 +39,22 @@
   export default class AdminDashboard extends Vue {
     consultarAgenda() {
       this.$router.push('/agendar-consulta');
+    }
+  
+    listarUsuarios() {
+      // Add your logic here for the 'listarUsuarios' method.
+    }
+  
+    cadastrarUsuario() {
+      // Add your logic here for the 'cadastrarUsuario' method.
+    }
+  
+    cadastrarMedico() {
+      // Add your logic here for the 'cadastrarMedico' method.
+    }
+  
+    criarAgenda() {
+      // Add your logic here for the 'criarAgenda' method.
     }
   }
   </script>

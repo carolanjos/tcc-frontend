@@ -1,9 +1,9 @@
 <template>
   <div>
     <NavBar />
-    <Banner />
-    <Features />
-    <Testimonials />
+    <PartOne />
+    <PartTwo />
+    <PartThree />
     <Footer />
   </div>
 </template>
@@ -12,17 +12,17 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import NavBar from '../components/NavBar.vue';
-import Banner from '../components/home/banner-home.component.vue';
-import Features from '../components/home/features-home.component.vue';
-import Testimonials from '../components/home/testimonials-home.component.vue';
+import PartOne from '../components/home/PartOne.component.vue';
+import PartTwo from '../components/home/PartTwo.component.vue';
+import PartThree from '../components/home/PartThree.component.vue';
 import Footer from '../components/Footer.vue';
 
 @Component({
   components: {
     NavBar,
-    Banner,
-    Features,
-    Testimonials,
+    PartOne,
+    PartTwo,
+    PartThree,
     Footer,
   },
 })

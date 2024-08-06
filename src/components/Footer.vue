@@ -128,7 +128,7 @@ export default class Footer extends Vue {}
 
 .footer .footer-bottom {
   background-color: #2EACB2;
-  color: black;
+  color: #fff;
   text-align: center;
   padding: 0.5rem;
   font-size: 0.875rem;

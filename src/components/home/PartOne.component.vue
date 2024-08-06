@@ -14,7 +14,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 @Component
-export default class Banner extends Vue {}
+export default class PartOne extends Vue {}
 </script>
 
 <style scoped>

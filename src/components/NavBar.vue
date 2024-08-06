@@ -13,7 +13,7 @@
       <div class="dropdown" @click="toggleDropdown">
         <button class="signup-button">Cadastro</button>
         <div v-if="dropdownVisible" class="dropdown-content">
-          <button @click="registerDoctor">Médico</button>
+          <button @click="doctorRegister">Médico</button>
           <button @click="registerPatient">Paciente</button>
         </div>
       </div>
@@ -36,10 +36,6 @@ export default class NavBar extends Vue {
     this.$router.push('/login');
   }
 
-  registerButton(): void {
-    this.$router.push('/register');
-  }
-
   homeButton(): void {
     this.$router.push('/home');
   }
@@ -48,8 +44,8 @@ export default class NavBar extends Vue {
     this.$router.push('/contact');
   }
 
-  registerDoctor(): void {
-    this.$router.push('/register');
+  doctorRegister(): void {
+    this.$router.push('/register-doctor');
   }
 
   registerPatient(): void {

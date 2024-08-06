@@ -2,34 +2,38 @@
   <v-app id="inspire">
     <NavBar />
     <v-main>
-      <v-container fluid fill-height class="container">
+      <v-container fluid class="container">
         <v-layout align-center justify-center>
           <v-flex xs12 sm10 md8>
             <v-card class="elevation-12 consultation-card">
-              <v-title class="consultation-title">Consultas</v-title>
+              <v-card-title class="consultation-title">Lista de consultas agendadas</v-card-title>
               <v-card-text>
                 <v-simple-table class="consultation-table">
                   <template v-slot:default>
                     <thead>
                       <tr>
-                        <th>Especialidade</th>
-                        <th>Médico</th>
-                        <th>Data</th>
-                        <th>Hora</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+                        <th class="text-center">Especialidade</th>
+                        <th class="text-center">Médico</th>
+                        <th class="text-center">Data</th>
+                        <th class="text-center">Hora</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(appointment, index) in appointments" :key="index">
-                        <td>{{ appointment.specialty }}</td>
-                        <td>{{ appointment.doctor }}</td>
-                        <td>{{ appointment.date }}</td>
-                        <td>{{ appointment.time }}</td>
-                        <td>{{ appointment.status }}</td>
-                        <td>
-                          <v-btn text color="#2EACB2" @click="rescheduleAppointment(index)">Remarcar</v-btn>
-                          <v-btn text color="#2EACB2" @click="cancelAppointment(index)">Cancelar</v-btn>
+                        <td class="text-center">{{ appointment.specialty }}</td>
+                        <td class="text-center">{{ appointment.doctor }}</td>
+                        <td class="text-center">{{ appointment.date }}</td>
+                        <td class="text-center">{{ appointment.time }}</td>
+                        <td class="text-center" :class="statusClass(appointment.status)">{{ appointment.status }}</td>
+                        <td class="text-center">
+                          <v-btn icon @click="rescheduleAppointment(index)">
+                            <v-icon color="#2EACB2">mdi-calendar-edit</v-icon>
+                          </v-btn>
+                          <v-btn icon @click="cancelAppointment(index)">
+                            <v-icon color="#ff5252">mdi-cancel</v-icon>
+                          </v-btn>
                         </td>
                       </tr>
                     </tbody>
@@ -65,6 +69,21 @@ export default class ConsultationsList extends Vue {
     { specialty: 'Otorrinolaringologista', doctor: 'Paloma', date: '30/02/2024', time: '09:00', status: 'Realizada' },
   ];
 
+  statusClass(status: string) {
+    switch (status) {
+      case 'Agendada':
+        return 'status-scheduled';
+      case 'Remarcada':
+        return 'status-rescheduled';
+      case 'Cancelada':
+        return 'status-canceled';
+      case 'Realizada':
+        return 'status-done';
+      default:
+        return '';
+    }
+  }
+
   rescheduleAppointment(index: number) {
     alert(`Remarcar consulta de ${this.appointments[index].doctor}`);
     // Adicione aqui a lógica para remarcar a consulta
@@ -78,6 +97,12 @@ export default class ConsultationsList extends Vue {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 .container {
   padding: 60px 20px;
 }
@@ -85,40 +110,45 @@ export default class ConsultationsList extends Vue {
 .consultation-card {
   padding: 40px 20px;
   border-radius: 15px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   width: 100%;
   text-align: center;
+  transition: box-shadow 0.3s ease;
 }
 
 .consultation-title {
   font-size: 30px;
   text-align: center;
-  padding: 10px 10px;
-  justify-content: center;
+  color: #2EACB2;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .consultation-table thead {
   background-color: #f0f0f0;
+  text-align: center;
+  font-size: 30px;
+  text-align: center;
+  padding: 30px;
+  color: #2EACB2;
 }
 
 .consultation-table th, .consultation-table td {
   padding: 10px;
-  font-weight: bold;
   font-size: 16px;
   color: #333;
-  text-align: center; /* Alinhamento centralizado */
+}
+
+.text-center {
+  text-align: center;
+  font-size: 30px;
+  padding: 30px;
+  color: #2EACB2;
 }
 
 .consultation-table tbody tr {
   border-bottom: 1px solid #e0e0e0;
-}
-
-.v-text-field input {
-  background: #f9f9f9;
-}
-
-.v-text-field input::placeholder {
-  color: #a0a0a0;
 }
 
 .v-btn {
@@ -128,6 +158,22 @@ export default class ConsultationsList extends Vue {
 .v-btn:hover {
   background-color: #1c7e83;
   color: #fff !important;
+}
+
+.status-scheduled {
+  color: #2EACB2;
+}
+
+.status-rescheduled {
+  color: #FFA000;
+}
+
+.status-canceled {
+  color: #ff5252;
+}
+
+.status-done {
+  color: #4CAF50;
 }
 
 @media (max-width: 768px) {

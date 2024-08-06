@@ -6,87 +6,103 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12 register-card">
-              <v-title class="register-title">Cadastro</v-title>
+              <v-title class="register-title">Cadastro de Médico</v-title>
               <v-card-text>
-                <v-form @submit.prevent="registerDoctor">
+                <v-form>
+                  <div class="input-title">Nome Completo:</div>
                   <v-text-field
-                    v-model="doctor.name"
                     prepend-inner-icon="mdi-account"
-                    label="Nome Completo"
+                    placeholder="Nome Completo"
+                    v-model="doctor.name"
                     required
                     outlined
                   ></v-text-field>
+                  <div class="input-title">Email:</div>
                   <v-text-field
-                    v-model="doctor.email"
                     prepend-inner-icon="mdi-email"
-                    label="Email"
+                    placeholder="Email"
                     type="email"
+                    v-model="doctor.email"
                     required
                     outlined
                   ></v-text-field>
+                  <div class="input-title">Data de Nascimento:</div>
                   <v-text-field
-                    v-model="doctor.birthdate"
-                    prepend-inner-icon="mdi-calendar"
-                    label="Data de Nascimento"
+                    placeholder="Data de Nascimento"
                     type="date"
+                    v-model="doctor.birthdate"
                     required
                     outlined
                   ></v-text-field>
+                  <div class="input-title">CPF:</div>
                   <v-text-field
-                    v-model="doctor.document"
                     prepend-inner-icon="mdi-id-card"
-                    label="CPF"
+                    placeholder="CPF"
+                    v-model="doctor.document"
                     required
                     outlined
                     v-mask="'###.###.###-##'"
                   ></v-text-field>
+                  <div class="input-title">Sexo:</div>
                   <v-select
+                    :items="sexOptions"
                     v-model="doctor.sex"
-                    :items="['M', 'F']"
+                    placeholder="Sexo"
                     prepend-inner-icon="mdi-gender-male-female"
-                    label="Sexo"
                     required
                     outlined
                   ></v-select>
+                  <div class="input-title">Telefone:</div>
                   <v-text-field
-                    v-model="doctor.phone"
                     prepend-inner-icon="mdi-phone"
-                    label="Telefone"
+                    placeholder="Telefone"
+                    v-model="doctor.phone"
                     required
                     outlined
                     v-mask="'(##) #####-####'"
                   ></v-text-field>
+                  <div class="input-title">Senha:</div>
                   <v-text-field
-                    v-model="doctor.password"
                     prepend-inner-icon="mdi-lock"
-                    label="Senha"
+                    placeholder="Senha"
                     type="password"
+                    v-model="doctor.password"
                     required
                     outlined
                   ></v-text-field>
+                  <div class="input-title">CRM:</div>
                   <v-text-field
+                    prepend-inner-icon="mdi-identifier"
+                    placeholder="CRM"
                     v-model="doctor.crm"
-                    prepend-inner-icon="mdi-badge-account-horizontal"
-                    label="CRM"
                     required
                     outlined
                   ></v-text-field>
+                  <div class="input-title">Especialidades:</div>
                   <v-select
-                    v-model="doctor.specialties"
                     :items="specialtyOptions"
-                    item-text="name"
-                    item-value="id"
-                    prepend-inner-icon="mdi-star"
-                    label="Especialidades"
-                    required
+                    v-model="doctor.specialties"
+                    placeholder="Especialidades"
+                    prepend-inner-icon="mdi-clipboard-list"
                     multiple
+                    required
                     outlined
                   ></v-select>
-                  <v-btn type="submit" color="#2EACB2" block class="register-button">Cadastrar</v-btn>
+                  <v-btn
+                    type="submit"
+                    color="#2EACB2"
+                    block
+                    class="register-button"
+                    @click="registerDoctor"
+                  >
+                    Cadastrar
+                  </v-btn>
                 </v-form>
               </v-card-text>
-              <v-card-actions class="login-actions">
-                <v-btn key="login" text @click="$router.push('/login')" color="#2EACB2">Já possui conta? Faça seu login</v-btn>
+              <v-card-actions class="register-actions">
+                <v-btn key="login" text @click="$router.push('/login')" color="#2EACB2">
+                  Já possui conta? Faça seu login
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -98,60 +114,66 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import axios from 'axios';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import NavBar from '@/components/NavBar.vue';
 import Footer from '@/components/Footer.vue';
 
-export default defineComponent({
+@Component({
   components: {
     NavBar,
     Footer,
   },
-  data() {
-    return {
-      doctor: {
-        name: '',
-        email: '',
-        birthdate: '',
-        document: '',
-        sex: '',
-        phone: '',
-        password: '',
-        crm: '',
-        specialties: [],
-      },
-      specialtyOptions: [
-        { id: 1, name: 'Cardiologia' },
-        { id: 2, name: 'Dermatologia' },
-        { id: 3, name: 'Neurologia' },
-        // Adicione outras especialidades conforme necessário
-      ],
-    };
-  },
-  methods: {
-    async registerDoctor() {
-      try {
-        const response = await axios.post('http://localhost:8000/core/backoffice/doctor-register', this.doctor);
-        console.log(response.data);
-        this.$router.push('/login');
-      } catch (error) {
-        console.error(error);
-        // Trate o erro conforme necessário, talvez exibindo uma mensagem de erro
-      }
-    },
-  },
-});
+})
+export default class RegisterDoctor extends Vue {
+  doctor = {
+    name: '',
+    email: '',
+    birthdate: '',
+    document: '',
+    sex: '',
+    phone: '',
+    password: '',
+    crm: '',
+    specialties: []
+  };
+
+  sexOptions = [
+    { text: 'Masculino', value: 'M' },
+    { text: 'Feminino', value: 'F' },
+    { text: 'Outro', value: 'O' },
+  ];
+
+  specialtyOptions = [
+    { text: 'Cardiologia', value: 1 },
+    { text: 'Dermatologia', value: 2 },
+    { text: 'Ginecologia', value: 3 },
+    { text: 'Neurologia', value: 4 },
+    { text: 'Pediatria', value: 5 },
+    { text: 'Psiquiatria', value: 6 },
+    // Adicione mais especialidades conforme necessário
+  ];
+
+  registerDoctor() {
+    console.log(this.doctor);
+    // Lógica para registrar o médico
+  }
+}
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 .container {
   padding: 60px 20px;
-  width: 100%;
 }
 
 .register-card {
-  padding: 30px 20px;
+  padding: 40px 20px;
   border-radius: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -159,21 +181,23 @@ export default defineComponent({
 }
 
 .register-button {
-  margin-top: 0px;
+  margin-top: 20px;
   font-weight: bold;
   color: #fff;
 }
 
-.login-actions {
+.register-actions {
   justify-content: center;
   margin-top: 5px;
 }
 
-.v-text-field input {
+.v-text-field input,
+.v-select input {
   background: #f9f9f9;
 }
 
-.v-text-field input::placeholder {
+.v-text-field input::placeholder,
+.v-select input::placeholder {
   color: #a0a0a0;
 }
 
@@ -187,11 +211,19 @@ export default defineComponent({
 }
 
 .register-title {
-  font-size: 30px;
-  text-align: center;
-  padding: 10px 10px;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #1c7e83;
   justify-content: center;
-  font-family: 'Popins', sans-serif;
+  font-size: 25px;
+}
+
+.input-title {
+  text-align: left;
+  margin: 5px 0 5px 0;
+  font-weight: bold;
+  color: #1c7e83;
+  font-size: 18px;
 }
 
 @media (max-width: 768px) {

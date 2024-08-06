@@ -8,38 +8,50 @@
             <v-card class="elevation-12 login-card">
               <v-title class="login-title">Login</v-title>
               <v-card-text>
-                <v-form>
-                  <div class="input-title">Selecione o tipo de usuário</div>
-                  <v-select
-                    required
-                    placeholder="Selecione o tipo de usuário"
-                    :items="['Admin', 'Paciente', 'Médico']"
-                    outlined
-                  ></v-select>
-                  <div class="input-title">Email</div>
+                <v-form @submit.prevent="login">
+                  <div class="input-title">Email:</div>
                   <v-text-field
+                    v-model="email"
                     prepend-inner-icon="mdi-account"
                     placeholder="Email"
                     type="email"
                     required
                     outlined
                   ></v-text-field>
-                  <div class="input-title">Senha</div>
+                  <div class="input-title">Senha:</div>
                   <v-text-field
+                    v-model="password"
                     prepend-inner-icon="mdi-lock"
                     placeholder="Senha"
                     type="password"
                     required
                     outlined
                   ></v-text-field>
-                  <v-btn type="submit" color="#2EACB2" block class="login-button" @click="$router.push('/dashboard-patient')">Login</v-btn>
+                  <v-btn
+                    type="submit"
+                    color="#2EACB2"
+                    block
+                    class="login-button"
+                  >
+                    Login
+                  </v-btn>
                 </v-form>
+                <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
               </v-card-text>
               <v-card-actions class="register-actions">
-                <v-btn key="register" text @click="$router.push('/register')" color="#2EACB2">Não possui conta? Cadastre-se</v-btn>
+                <v-btn
+                  key="register"
+                  text
+                  @click="$router.push('/register')"
+                  color="#2EACB2"
+                >
+                  Não possui conta? Cadastre-se
+                </v-btn>
               </v-card-actions>
               <v-card-actions class="login-actions">
-                <v-btn text color="#2EACB2" @click="$router.push('/forgot-password')">Esqueceu a senha?</v-btn>
+                <v-btn text color="#2EACB2" @click="$router.push('/forgot-password')">
+                  Esqueceu a senha?
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -53,6 +65,7 @@
 <script lang="ts">
 import Component from 'vue-class-component';
 import Vue from 'vue';
+import axios from '@/utils/axios';
 import NavBar from '@/components/NavBar.vue';
 import Footer from '@/components/Footer.vue';
 
@@ -63,10 +76,48 @@ import Footer from '@/components/Footer.vue';
   }
 })
 export default class Login extends Vue {
+  email = '';
+  password = '';
+  errorMessage = '';
+
+  async login() {
+    try {
+      const response = await axios.post('/api/token/', {
+        email: this.email,
+        password: this.password
+      });
+      const token = response.data.access;
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const role = decodedToken.role;
+
+      // Armazenar o token e o papel do usuário no localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+
+      // Redirecionar para a dashboard apropriada
+      if (role === 'medico') {
+        this.$router.push('/dashboard-medico');
+      } else if (role === 'paciente') {
+        this.$router.push('/dashboard-paciente');
+      } else {
+        // Redirecionar para uma página padrão se o papel do usuário não for reconhecido
+        this.$router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error(error);
+      this.errorMessage = 'Falha no login. Verifique suas credenciais e tente novamente.';
+    }
+  }
 }
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 .container {
   padding: 60px 20px;
 }
@@ -90,11 +141,13 @@ export default class Login extends Vue {
   margin-top: 5px;
 }
 
-.v-text-field input, .v-select input {
+.v-text-field input,
+.v-select input {
   background: #f9f9f9;
 }
 
-.v-text-field input::placeholder, .v-select input::placeholder {
+.v-text-field input::placeholder,
+.v-select input::placeholder {
   color: #a0a0a0;
 }
 
@@ -115,17 +168,27 @@ export default class Login extends Vue {
 }
 
 .login-title {
-  font-size: 30px;
-  text-align: center;
-  padding: 10px 10px;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #1c7e83;
   justify-content: center;
+  font-size: 35px;
 }
 
 .input-title {
   text-align: left;
-  margin: 10px 0 5px 0;
+  margin: 5px 0 5px 0;
   font-weight: bold;
   color: #1c7e83;
+  font-size: 18px;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #1c7e83;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 
 @media (max-width: 768px) {

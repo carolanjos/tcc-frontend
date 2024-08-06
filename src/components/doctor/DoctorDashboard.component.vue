@@ -9,7 +9,7 @@
                 <v-title class="dashboard-title">Você está logado(a)</v-title>
                 <v-card-text>
                   <v-subtitle class="dashboard-subtitle">Escolha a opção que deseja</v-subtitle>
-                  <v-btn block color="#2EACB2" class="dashboard-button" @click="consultarAgena">Consultar agenda</v-btn>
+                  <v-btn block color="#2EACB2" class="dashboard-button" @click="consultarAgenda">Consultar agenda</v-btn>
                 </v-card-text>
               </v-card>
             </v-flex>
