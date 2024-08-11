@@ -1,96 +1,112 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import Home from '../views/Home.vue'
-import Login from '../components/login/LoginComponent.vue'
-import RegisterPatient from '@/components/register/RegisterPatientComponent.vue'
-import PacienteDashboard from '../components/patient/PatientDashboard.vue'
-import DoctorDashboard from '../components/doctor/DoctorDashboard.vue'
-import AdminDashboard from '../components/doctor/AdminDashboard.vue'
-import ForgotPassword from '../components/login/ForgotPasswordComponent.vue'
-import ResetPassword from '../components/login/ResetPasswordComponent.vue'
-import ScheduleAppointment from '../components/scheduler/ScheduleAppointmentComponent.vue'
-import ConsultationsList from '../components/consultation/ConsultationsListComponent.vue'
-import SuccessPage from '../components/success/SuccessPageComponent.vue'
-import Contact from '../components/contact/ContactComponent.vue'
-import LandingPage from '../components/TesteComponent.vue'
-import RegisterDoctor from '../components/register/RegisterDoctorComponent.vue'
-import AgendDoctor from '../components/doctor/AgendDoctor.component.vue'
-import ClinicSchedule from '../components/admin/ClinicSchedule.component.vue'
+import Home from '../global/home/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home,
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../components/login/LoginComponent.vue')
-  },
-  {
-    path: '/register',
-    name: 'RegisterPatient',
-    component: () => import('../components/register/RegisterPatientComponent.vue')
-  },
-  {
-    path: '/dashboard-patient',
-    name: 'patient',
-    component: () => import('../components/patient/PatientDashboard.component.vue')
-  },
-  {
-    path: '/dashboard-doctor',
-    name: 'doctor',
-    component: () => import('../components/doctor/DoctorDashboard.component.vue')
-  },
-  {
-    path: '/dashboard-admin',
-    name: 'admin',
-    component: () => import('../components/admin/AdminDashboard.component.vue')
+    component: () => import('@/modules/Login/Login.vue')
   },
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
-    component: () => import('../components/login/ForgotPasswordComponent.vue')
+    component: () => import('@/modules/Login/ForgotPassword/ForgotPassword.vue')
   },
   {
     path: '/reset-password',
     name: 'ResetPassword',
-    component: () => import('../components/login/ResetPasswordComponent.vue')
+    component: () => import('@/modules/Login/SetPassword/SetPassword.vue')
   },
   {
-    path: '/schedule',
-    name: 'ScheduleAppointment', 
-    component: () => import('../components/scheduler/ScheduleAppointmentComponent.vue')
-  },
-  {
-    path: '/list-consult',
-    name: 'ConsultationsList', 
-    component: () => import('../components/consultation/ConsultationsListComponent.vue')
-  },
-  {
-    path: '/success',
-    name: 'SuccessPage',
-    component: () => import('../components/success/SuccessPageComponent.vue')
-  },
-  {
-    path: '/contact',
-    name: 'Contact',
-    component: () => import('../components/contact/ContactComponent.vue')
+    path: '/register',
+    name: 'RegisterPatient',
+    component: () => import('@/modules/Register/Register.vue')
   },
   {
     path: '/register-doctor',
     name: 'RegisterDoctor',
-    component: () => import('../components/register/RegisterDoctorComponent.vue')
+    component: () => import('@/modules/Register/RegisterDoctor/RegisterDoctor.vue')
   },
   {
-    path: '/agend-doctor',
-    name: 'AgendDoctor',
-    component: () => import('../components/doctor/AgendDoctor.component.vue')
+    path: '/dashboard-patient',
+    name: 'patient',
+    component: () => import('@/global/dashboard/patient-dashboard.component.vue')
+  },
+  {
+    path: '/dashboard-doctor',
+    name: 'doctor',
+    component: () => import('@/global/dashboard/doctor-dashboard.component.vue')
+  },
+  {
+    path: '/dashboard-admin',
+    name: 'admin',
+    component: () => import('@/global/dashboard/admin-dashboard.component.vue')
+  },
+  {
+    path: '/schedule',
+    name: 'ScheduleAppointment', 
+    component: () => import('@/modules/Schedule/Schedule.vue')
+  },
+  {
+    path: '/list-consult',
+    name: 'ConsultationsList', 
+    component: () => import('@/modules/CheckScheduling/CheckScheduling.vue')
+  },
+  {
+    path: '/success',
+    name: 'SuccessPage',
+    component: () => import('@/global/success/success-page.component.vue')
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('@/modules/Contact/Contact.vue')
+  },
+  {
+    path: '/create-agenda',
+    name: 'CreateAgenda',
+    component: () => import('@/modules/CreateAgenda/CreateAgenda.vue')
+  },
+  {
+    path: '/home-value',
+    name: 'HomeValue',
+    component: () => import('@/global/home/components/home-value.component.vue')
+  },
+  {
+    path: '/home-infos',
+    name: 'HomeInfos',
+    component: () => import('@/global/home/components/home-infos.component.vue')
+  },
+  {
+    path: '/edit-doctor',
+    name: 'EditDoctor',
+    component: () => import('@/modules/Register/EditProfile/EditProfileDoctor.vue')
+  },
+  {
+    path: '/features',
+    name: 'Features',
+    component: () => import('@/global/features/features.component.vue')
+  },
+  {
+    path: '/list-doctor',
+    name: 'ListDoctor',
+    component: () => import('@/modules/CheckScheduling/CheckSchedulingDoctor.vue')
+  },
+  {
+    path: '/edit-profile',
+    name: 'EditProfile',
+    component: () => import('@/modules/Register/EditProfile/EditProfile.vue')
   }
+
 ]
 
 const router = new VueRouter({
