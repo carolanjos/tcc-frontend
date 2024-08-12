@@ -11,7 +11,6 @@
                   <v-subtitle class="dashboard-subtitle">Escolha a opção que deseja</v-subtitle>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="listarUsuarios">Listar usuários</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="consultarAgenda">Consultar agenda</v-btn>
-                    <v-btn block color="#2EACB2" class="dashboard-button" @click="cadastrarUsuario">Cadastrar usuário</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="cadastrarMedico">Cadastrar médico</v-btn>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="criarAgenda">Criar agenda</v-btn>
                 </v-card-text>
@@ -51,10 +50,6 @@
   
     listarUsuarios() {
       // Add your logic here for the 'listarUsuarios' method.
-    }
-  
-    cadastrarUsuario() {
-      this.$router.push('/register');
     }
   
     cadastrarMedico() {

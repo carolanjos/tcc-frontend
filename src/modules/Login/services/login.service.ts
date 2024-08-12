@@ -45,6 +45,7 @@ class LoginService {
 
   public logout(): void {
     LocalStorageService.clear();
+    LocalStorageService.removeItem('patientData');
   }
 
   public async loginForgotPassword(email: string): Promise<void> {

@@ -1,16 +1,18 @@
-export default class CheckSchedulingEntity {
-    specialty: string;
-    doctor: string;
-    date: string;
-    time: string;
-    status: string;
+// export default class CheckSchedulingEntity {
+//     id: string;
+//     specialty: string;
+//     doctor: string;
+//     date: string;
+//     time: string;
+//     status: string;
 
-    constructor() {
-        this.specialty = '';
-        this.doctor = '';
-        this.date = '';
-        this.time = '';
-        this.status = '';
-    }
-}
+//     constructor() {
+//         this.id = '';
+//         this.specialty = '';
+//         this.doctor = '';
+//         this.date = '';
+//         this.time = '';
+//         this.status = '';
+//     }
+// }
   

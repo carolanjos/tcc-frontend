@@ -27,6 +27,16 @@ class RegisterDoctorService {
       throw error;
     }
   }
+
+  async listSpecialties() {
+    try {
+      const response = await http.get('/doctor/list-specialties');
+      return response.data; // Lista de especialidades
+    } catch (error) {
+      console.error('Erro ao listar especialidades:', error);
+      throw error;
+    }
+  }
 }
 
 export default new RegisterDoctorService();

@@ -49,7 +49,7 @@
     }
 
     agendarConsulta() {
-      this.$router.push('/agendar-consulta');
+      this.$router.push('/schedule');
     }
   
     reagendarConsulta() {

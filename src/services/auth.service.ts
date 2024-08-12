@@ -5,15 +5,11 @@ import TokenService from '@/modules/Login/services/token.service';
 import http from './http.service';
 
 class AuthService {
-  private getToken(): string {
-    const token = LocalStorageService.getItem('authToken');
-    if (!token) {
-      console.error('Erro: Nenhum token de autenticação encontrado.');
-      throw new Error('No auth token found');
-    }
-    return token;
+  public async getRole(): Promise<string | null> {
+    // Supondo que você armazena o papel do usuário no localStorage
+    return localStorage.getItem('role');
   }
-  
+
   public async loginSuperAdmin(credentials: LoginData): Promise<TokenData> {
     try {
       console.log('Iniciando login com credenciais:', credentials);
@@ -64,6 +60,7 @@ class AuthService {
   public logout(): void {
     console.log('Realizando logout...');
     LocalStorageService.clear();
+    LocalStorageService.removeItem('patientData');
   }
 
   public shouldRefreshToken(): boolean {

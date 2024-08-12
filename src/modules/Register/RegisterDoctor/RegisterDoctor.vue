@@ -136,6 +136,7 @@ export default class RegisterDoctor extends Vue {
   doctor: Doctor = new Doctor();
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  specialtyOptions: Array<{ text: string; value: number }> = [];
 
   sexOptions = [
     { text: 'Masculino', value: 'M' },
@@ -143,14 +144,17 @@ export default class RegisterDoctor extends Vue {
     { text: 'Outro', value: 'O' },
   ];
 
-  specialtyOptions = [
-    { text: 'Cardiologia', value: 1 },
-    { text: 'Dermatologia', value: 2 },
-    { text: 'Ginecologia', value: 3 },
-    { text: 'Neurologia', value: 4 },
-    { text: 'Pediatria', value: 5 },
-    { text: 'Psiquiatria', value: 6 },
-  ];
+  async mounted() {
+    try {
+      const specialties = await RegisterDoctorService.listSpecialties();
+      this.specialtyOptions = specialties.map((specialty: any) => ({
+        text: specialty.name,
+        value: specialty.id,
+      }));
+    } catch (error: any) {
+      this.errorMessage = `Erro ao carregar especialidades: ${error.message}`;
+    }
+  }
 
   async registerDoctor() {
     this.errorMessage = null;
@@ -190,6 +194,7 @@ export default class RegisterDoctor extends Vue {
   }
 }
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');

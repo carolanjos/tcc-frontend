@@ -1,13 +1,23 @@
-// src/modules/UserProfile/entities/user-profile.entity.ts
-
 export default class UserProfile {
-  id!: number;
-  name!: string;
-  email!: string;
+  public id: number;
+  public name: string;
+  public email: string;
+  public phone: string;
+  public sex: string;
+  public date_birth: string;
+  public document: string;
+  public crm: string;
+  public specialties: number[];
 
-  constructor(id: number, name: string, email: string) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
+  constructor() {
+    this.id = 0; // ou null dependendo de como seu sistema lida com IDs
+    this.name = '';
+    this.email = '';
+    this.phone = '';
+    this.sex = '';
+    this.date_birth = '';
+    this.document = '';
+    this.crm = '';
+    this.specialties = [];
   }
 }
