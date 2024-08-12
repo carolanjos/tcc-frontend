@@ -27,26 +27,30 @@
   import Footer from '@/global/footer/footer.component.vue';
   import LocalStorageService from '@/services/localStorage.service';
   import Vue from 'vue';
+  import VueRouter from 'vue-router'; // Import VueRouter
   
   @Component({
     components: {
       NavBar,
-      Footer
+      Footer,
+      VueRouter, // Add VueRouter to components
     }
   })
   export default class DoctorDashboard extends Vue {
     name = '';
-
+    $router!: VueRouter; // Add $router property
+  
     mounted() {
       const storedName = LocalStorageService.getItem('userName') || '';
       console.log('Nome recuperado do LocalStorage:', storedName);
       this.name = storedName;
       this.$forceUpdate(); // Força a atualização da interface
     }
+    
     consultarAgenda() {
-      this.$router.push('/agendar-consulta');
+      this.$router.push('/list-doctor');
     }
-
+  
     createAgenda() {
       this.$router.push('/create-agenda');
     }

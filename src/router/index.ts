@@ -43,7 +43,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/dashboard-doctor',
-    name: 'doctor',
+    name: 'DoctorDashboard',
     component: () => import('@/global/dashboard/doctor-dashboard.component.vue')
   },
   {
@@ -85,11 +85,6 @@ const routes: Array<RouteConfig> = [
     path: '/home-infos',
     name: 'HomeInfos',
     component: () => import('@/global/home/components/home-infos.component.vue')
-  },
-  {
-    path: '/edit-doctor',
-    name: 'EditDoctor',
-    component: () => import('@/modules/Register/EditProfile/EditProfileDoctor.vue')
   },
   {
     path: '/features',

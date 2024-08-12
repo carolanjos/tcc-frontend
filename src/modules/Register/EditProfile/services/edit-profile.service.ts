@@ -1,28 +1,51 @@
-import Doctor from '@/modules/Register/RegisterDoctor/entities/doctor.entity';
-import axios from 'axios';
+import http from '@/services/http.service';
+import LocalStorageService from '@/services/localStorage.service';
+import UserProfile from '@/modules/Register/EditProfile/entities/edit-profile.entity';
 
-class EditDoctorService {
-  getDoctorFromStorage(): Doctor | null {
-    const doctorData = localStorage.getItem('doctor');
-    if (doctorData) {
-      return JSON.parse(doctorData) as Doctor;
+class EditProfileService {
+  private getToken(): string {
+    const token = LocalStorageService.getItem('authToken');
+    if (!token) {
+      console.error('Erro: Nenhum token de autenticação encontrado.');
+      throw new Error('No auth token found');
     }
-    return null;
+    return token;
   }
 
-  async updateDoctor(doctor: Doctor): Promise<void> {
+  public async fetchUserProfile(): Promise<UserProfile> {
+    const token = this.getToken();
+
     try {
-      const response = await axios.put('/backoffice/doctor-register', doctor, {
+      const response = await http.get('/user/profile', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+          'Authorization': `Token ${token}`,
+        },
       });
-      // Atualizar o LocalStorage com as novas informações
-      localStorage.setItem('doctor', JSON.stringify(response.data));
-    } catch (error: any) {
-      throw new Error('Erro ao atualizar o perfil do médico.');
+      const { id, name, email } = response.data;
+      return new UserProfile(id, name, email);
+    } catch (error) {
+      console.error('Erro ao buscar perfil do usuário:', error);
+      throw error;
+    }
+  }
+
+  public async updateUserProfile(userProfile: UserProfile): Promise<void> {
+    const token = this.getToken();
+
+    try {
+      await http.patch(`/user/profile/${userProfile.id}`, {
+        name: userProfile.name,
+        email: userProfile.email,
+      }, {
+        headers: {
+          'Authorization': `Token ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error('Erro ao atualizar perfil do usuário:', error);
+      throw error;
     }
   }
 }
 
-export default new EditDoctorService();
+export default new EditProfileService();

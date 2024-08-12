@@ -1,33 +1,59 @@
+// src/modules/CheckScheduling/services/check-doctor.service.ts
+
+import http from '@/services/http.service';
+import LocalStorageService from '@/services/localStorage.service';
 import DoctorCheck from '@/modules/CheckScheduling/entities/check-doctor.entity';
 
-export default class CheckDoctorService {
-  // Método para buscar as agendas criadas pelo médico
-  async fetchAgendas(): Promise<DoctorCheck[]> {
-    try {
-      // Simulação de dados. Substitua por uma chamada à sua API para buscar os dados reais.
-      const response = [
-        new DoctorCheck('2024-08-10', '14:00', 'Paciente A', 'Cardiologia', 'Agendada', false),
-        new DoctorCheck('2024-08-11', '09:00', 'Paciente B', 'Dermatologia', 'Realizada', true),
-        new DoctorCheck('2024-08-12', '10:30', 'Paciente C', 'Ortopedia', 'Remarcada', false),
-        new DoctorCheck('2024-08-13', '11:00', 'Paciente D', 'Pediatria', 'Cancelada', false),
-      ];
+class CheckDoctorService {
+  public async fetchAgendas(): Promise<DoctorCheck[]> {
+    const token = LocalStorageService.getItem('authToken');
 
-      // Retorna a lista de agendas
-      return response;
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+
+    try {
+      const response = await http.get('/doctor/appointments', {
+        headers: {
+          'Authorization': `Token ${token}`,
+        },
+      });
+
+      return response.data.map((appointment: any) =>
+        new DoctorCheck(
+          appointment.id,
+          appointment.date,
+          appointment.time,
+          appointment.patient,
+          appointment.specialty,
+          appointment.status,
+          appointment.attended
+        )
+      );
     } catch (error) {
       console.error('Erro ao buscar agendas:', error);
       throw error;
     }
   }
 
-  // Método para salvar as presenças dos pacientes
-  async saveAttendances(agendas: DoctorCheck[]): Promise<void> {
+  public async saveAttendances(updatedAgendas: DoctorCheck[]): Promise<void> {
+    const token = LocalStorageService.getItem('authToken');
+
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+
     try {
-      // Lógica para salvar as presenças no backend (API, banco de dados, etc.)
-      console.log('Presenças salvas com sucesso!');
+      await http.put('/doctor/calendar/attendances', updatedAgendas, {
+        headers: {
+          'Authorization': `Token ${token}`,
+        },
+      });
     } catch (error) {
       console.error('Erro ao salvar presenças:', error);
       throw error;
     }
   }
 }
+
+export default new CheckDoctorService();

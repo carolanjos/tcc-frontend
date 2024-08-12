@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import store from '@/store';
 import TokenService from '@/modules/Login/services/token.service';
 import LocalStorageService from '@/services/localStorage.service';
@@ -10,22 +10,11 @@ const http = axios.create({
 
 // Adiciona um interceptor de requisição para incluir o token de autenticação
 http.interceptors.request.use(
-  (config: AxiosRequestConfig): AxiosRequestConfig => {
+  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     const token = LocalStorageService.getItem('authToken');
-
     if (token) {
-      config.headers = {
-        ...config.headers,
-        'Authorization': `Token ${token}`,
-        'Accept': 'application/json',
-      };
+      config.headers.Authorization = `Token ${token}`; // Alterado para usar "Token" em vez de "Bearer"
     }
-
-    // Verifique se o token precisa ser atualizado
-    if (TokenService.shouldRefreshToken()) {
-      TokenService.refreshToken();
-    }
-
     return config;
   },
   (error: AxiosError) => {

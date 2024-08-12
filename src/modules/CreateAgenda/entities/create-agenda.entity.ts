@@ -1,17 +1,11 @@
-export default class DoctorCalendar {
-  public startHour: string;
-  public endHour: string;
-  public startDate: string;
-  public endDate: string;
-  public weekDays: string[];
-  public specialtyId: string;
+// src/modules/CreateAgenda/entities/create-agenda.entity.ts
 
-  constructor() {
-    this.startHour = '';
-    this.endHour = '';
-    this.startDate = '';
-    this.endDate = '';
-    this.weekDays = [];
-    this.specialtyId = '';
-  }
+export default class Calendar {
+  id: number | null = null;
+  start_hour = '';  // Tipo string é inferido automaticamente
+  end_hour = '';    // Tipo string é inferido automaticamente
+  start_date = '';  // Tipo string é inferido automaticamente
+  end_date = '';    // Tipo string é inferido automaticamente
+  week_day: string[] = [];
+  doctor: number | null = null;
 }

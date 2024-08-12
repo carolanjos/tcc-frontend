@@ -5,6 +5,15 @@ import TokenService from '@/modules/Login/services/token.service';
 import http from './http.service';
 
 class AuthService {
+  private getToken(): string {
+    const token = LocalStorageService.getItem('authToken');
+    if (!token) {
+      console.error('Erro: Nenhum token de autenticação encontrado.');
+      throw new Error('No auth token found');
+    }
+    return token;
+  }
+  
   public async loginSuperAdmin(credentials: LoginData): Promise<TokenData> {
     try {
       console.log('Iniciando login com credenciais:', credentials);

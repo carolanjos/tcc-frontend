@@ -61,8 +61,8 @@
 </template>
 
   
-  <script lang="ts">
- import { Component, Vue } from 'vue-property-decorator';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
 import CheckDoctorService from '@/modules/CheckScheduling/services/check-doctor.service';
@@ -76,11 +76,13 @@ import DoctorCheck from '@/modules/CheckScheduling/entities/check-doctor.entity'
 })
 export default class AgendaList extends Vue {
   agendas: DoctorCheck[] = [];
-  private createDoctorService = new CheckDoctorService();
+
+  // Use diretamente a instância do serviço
+  private checkDoctorService = CheckDoctorService;
 
   async mounted() {
     try {
-      this.agendas = await this.createDoctorService.fetchAgendas();
+      this.agendas = await this.checkDoctorService.fetchAgendas();
     } catch (error) {
       console.error('Erro ao buscar agendas:', error);
     }
@@ -107,15 +109,14 @@ export default class AgendaList extends Vue {
         ...agenda,
         attended: agenda.attended.toString() === 'Sim',
       }));
-      await this.createDoctorService.saveAttendances(updatedAgendas);
+      await this.checkDoctorService.saveAttendances(updatedAgendas);
       console.log('Presenças salvas com sucesso!');
     } catch (error) {
       console.error('Erro ao salvar presenças:', error);
     }
   }
 }
-
-  </script>
+</script>
   
   <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');

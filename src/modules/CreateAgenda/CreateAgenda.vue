@@ -2,124 +2,85 @@
   <v-app id="inspire">
     <NavBar />
     <v-main>
-      <v-container fluid fill-height class="d-flex align-center justify-center">
-        <v-card class="elevation-12 schedule-card">
-          <v-card-title class="schedule-title">Criar agenda e definir horário</v-card-title>
-          <v-card-text>
-            <v-form ref="form">
-              <v-row>
-                <v-col cols="12" md="6">
+      <v-container fluid fill-height class="container">
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-card class="elevation-12 create-agenda-card">
+              <v-card-title class="create-agenda-title">Criar Agenda</v-card-title>
+              <v-card-text>
+                <v-form ref="form">
+                  <div class="input-title">Hora de Início:</div>
                   <v-text-field
-                    v-model="startHour"
-                    label="Hora de Início"
-                    prepend-inner-icon="mdi-clock-outline"
-                    placeholder="HH:MM"
-                    outlined
-                    v-mask="'##:##'"
+                    prepend-inner-icon="mdi-clock-start"
+                    placeholder="Hora de Início"
+                    type="time"
+                    v-model="calendar.start_hour"
                     required
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
+                    outlined
+                  ></v-text-field>
+                  <div class="input-title">Hora de Término:</div>
                   <v-text-field
-                    v-model="endHour"
-                    label="Hora de Término"
-                    prepend-inner-icon="mdi-clock-outline"
-                    placeholder="HH:MM"
-                    outlined
-                    v-mask="'##:##'"
+                    prepend-inner-icon="mdi-clock-end"
+                    placeholder="Hora de Término"
+                    type="time"
+                    v-model="calendar.end_hour"
                     required
-                  />
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
+                    outlined
+                  ></v-text-field>
+                  <div class="input-title">Data de Início:</div>
+                  <v-text-field
+                    prepend-inner-icon="mdi-calendar-start"
+                    placeholder="Data de Início"
+                    type="date"
+                    v-model="calendar.start_date"
+                    required
+                    outlined
+                  ></v-text-field>
+                  <div class="input-title">Data de Término:</div>
+                  <v-text-field
+                    prepend-inner-icon="mdi-calendar-end"
+                    placeholder="Data de Término"
+                    type="date"
+                    v-model="calendar.end_date"
+                    required
+                    outlined
+                  ></v-text-field>
+                  <div class="input-title">Dias da Semana:</div>
                   <v-select
-                    v-model="selectedSpecialty"
-                    :items="specialties"
-                    label="Especialidade"
-                    outlined
+                    :items="weekDayOptions"
+                    v-model="calendar.week_day"
+                    placeholder="Dias da Semana"
+                    multiple
                     required
+                    outlined
                   ></v-select>
-                </v-col>
-              </v-row>
-
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-menu
-                    ref="startDateMenu"
-                    v-model="startDateMenu"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
+                  <div class="input-title">Especialidade:</div>
+                  <v-select
+                    :items="specialtyOptions"
+                    v-model="selectedSpecialty"
+                    placeholder="Selecione a Especialidade"
+                    required
+                    outlined
+                  ></v-select>
+                  <v-btn
+                    color="#2EACB2"
+                    block
+                    class="create-agenda-button"
+                    @click="createAgenda"
                   >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="startDate"
-                        label="Data de Início"
-                        prepend-inner-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                        outlined
-                        v-mask="'##/##/####'"
-                      />
-                    </template>
-                    <v-date-picker v-model="startDate" @input="startDateMenu = false" />
-                  </v-menu>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-menu
-                    ref="endDateMenu"
-                    v-model="endDateMenu"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="endDate"
-                        label="Data de Término"
-                        prepend-inner-icon="mdi-calendar"
-                        readonly
-                        v-bind="attrs"
-                        v-on="on"
-                        outlined
-                      />
-                    </template>
-                    <v-date-picker v-model="endDate" @input="endDateMenu = false" />
-                  </v-menu>
-                </v-col>
-              </v-row>
-
-              <v-divider class="my-4" />
-
-              <v-checkbox-group v-model="weekDays" label="Dias da Semana" required>
-                <v-row>
-                  <v-col v-for="day in days" :key="day" cols="12" md="4">
-                    <v-checkbox :label="day" :value="day" />
-                  </v-col>
-                </v-row>
-              </v-checkbox-group>
-
-              <v-divider class="my-4" />
-
-              <v-row>
-                <v-col cols="12">
-                  <v-btn color="#2EACB2" block class="white--text mb-4" @click="createAgenda">
-                    Adicionar Disponibilidade
+                    Criar Agenda
                   </v-btn>
-                </v-col>
-                <v-col cols="12">
-                  <v-btn color="error" block class="white--text" @click="cancel">
-                    Cancelar
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-card-text>
-        </v-card>
+                  <v-alert v-if="errorMessage" type="error" dismissible>
+                    {{ errorMessage }}
+                  </v-alert>
+                  <v-alert v-if="successMessage" type="success" dismissible>
+                    {{ successMessage }}
+                  </v-alert>
+                </v-form>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-main>
     <Footer />
@@ -127,64 +88,65 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import Doctor from '@/modules/Register/RegisterDoctor/entities/doctor.entity';
-import CreateCalendarService from '@/modules/CreateAgenda/services/create-agenda.service';
-import DoctorCalendar from '@/modules/CreateAgenda/entities/create-agenda.entity';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import Calendar from '@/modules/CreateAgenda/entities/create-agenda.entity';
+import CreateAgendaService from '@/modules/CreateAgenda/services/create-agenda.service';
 import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
+import LocalStorageService from '@/services/localStorage.service';
 
 @Component({
   components: {
-      NavBar,
-      Footer,
-    },
+    NavBar,
+    Footer,
+  },
 })
-export default class CreateCalendar extends Vue {
-  private startHour = '';
-  private endHour = '';
-  private startDate = '';
-  private endDate = '';
-  private startDateMenu = false;
-  private endDateMenu = false;
-  private weekDays: string[] = [];
-  private days: string[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+export default class CreateAgenda extends Vue {
+  calendar: Calendar = new Calendar();
+  specialtyOptions: { text: string; value: number }[] = [];
+  selectedSpecialty: number | null = null;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
 
-  private selectedSpecialty = '';
-  private specialties: number[] = [];
-  
-  private doctorId = Number(localStorage.getItem('doctorId'));
+  weekDayOptions = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
 
-  private createCalendarService = new CreateCalendarService();
-
-  async created() {
+  async mounted() {
     try {
-      this.specialties = await this.createCalendarService.getSpecialtiesFromDoctor(this.doctorId);
-    } catch (error) {
-      console.error('Erro ao obter especialidades:', error);
+      const specialties = await CreateAgendaService.getSpecialties();
+      this.specialtyOptions = specialties.map((specialty: any) => ({
+        text: specialty.name,
+        value: specialty.id,
+      }));
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Erro ao carregar especialidades.';
     }
   }
 
-    private async createAgenda() {
-    try {
-      const calendar = new DoctorCalendar();
-      calendar.startHour = this.startHour;
-      calendar.endHour = this.endHour;
-      calendar.startDate = this.startDate;
-      calendar.endDate = this.endDate;
-      calendar.weekDays = this.weekDays;
-      calendar.specialtyId = this.selectedSpecialty;
+  async createAgenda() {
+    this.errorMessage = null;
+    this.successMessage = null;
 
-      const result = await this.createCalendarService.createCalendar(calendar);
-      console.log('Agenda criada com sucesso:', result);
-    } catch (error) {
-      console.error('Erro ao criar a agenda:', error);
+    const role = LocalStorageService.getItem('role');
+    
+    if (role !== 'admin' && role !== 'medico') {
+      this.errorMessage = 'Você não tem permissão para criar uma agenda.';
+      return;
     }
-  }
 
+    if (!this.selectedSpecialty) {
+      this.errorMessage = 'Por favor, selecione uma especialidade.';
+      return;
+    }
 
-  private cancel() {
-    this.$router.go(-1);
+    this.calendar.doctor = this.selectedSpecialty;
+
+    try {
+      await CreateAgendaService.createAgenda(this.calendar);
+      this.successMessage = 'Agenda criada com sucesso!';
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Erro ao criar a agenda.';
+    }
   }
 }
 </script>
@@ -197,64 +159,43 @@ export default class CreateCalendar extends Vue {
 }
 
 .container {
-  padding: 30px 10px;
+  padding: 60px 20px;
 }
 
-.schedule-card {
-  padding: 20px 10px;
+.create-calendar-card {
+  padding: 40px 20px;
   border-radius: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
   text-align: center;
-  max-width: 700px;
 }
 
-.schedule-title {
-  margin-bottom: 10px;
+.create-calendar-button {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.calendar-title {
+  margin-top: 5px;
   font-weight: bold;
   color: #1c7e83;
-  font-size: 22px;
+  justify-content: center;
+  font-size: 25px;
 }
 
-.v-text-field input,
-.v-select input {
-  background: #f9f9f9;
-}
-
-.v-text-field input::placeholder,
-.v-select input::placeholder {
-  color: #a0a0a0;
-}
-
-.v-btn {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 25px;
+.input-title {
+  text-align: left;
+  margin: 5px 0 5px 0;
   font-weight: bold;
+  color: #1c7e83;
+  font-size: 18px;
 }
 
-.v-btn:hover {
-  background-color: #1c7e83;
-  color: #fff !important;
-}
-
-.my-2 {
-  margin: 8px 0;
-}
-
-.my-1 {
-  margin: 4px 0;
-}
-
-.mb-2,
-.mt-2 {
-  margin: 0;
-}
-
-.white--text {
-  color: #fff !important;
-}
-
-.button-width {
-  max-width: 300px;
-  margin: 0 auto;
+@media (max-width: 768px) {
+  .create-calendar-card {
+    width: 100%;
+    margin: 0 10px;
+  }
 }
 </style>

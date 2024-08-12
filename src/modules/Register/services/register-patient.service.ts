@@ -13,6 +13,9 @@ class RegisterPatientService {
       // Salva a role "paciente" no LocalStorage
       localStorageService.setItem('role', 'paciente');
 
+      // Salva os dados do paciente no LocalStorage
+      localStorageService.setItem('patientData', JSON.stringify(patientData));
+
       // Exibe mensagem de sucesso
       alert('Paciente registrado com sucesso!');
 

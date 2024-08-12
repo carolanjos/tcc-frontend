@@ -62,7 +62,8 @@
     }
   
     criarAgenda() {
-      this.$router.push('/agend-doctor');
+      this.$router.push('/create-agenda');
+      console.log('Sucesso ao ir para a página de criar agenda');
     }
   }
   </script>
