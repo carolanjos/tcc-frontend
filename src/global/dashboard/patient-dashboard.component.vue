@@ -57,7 +57,7 @@
     }
   
     listarConsultas() {
-      this.$router.push('/listar-consultas');
+      this.$router.push('/list-consult');
     }
   
     alterarInformacoes() {

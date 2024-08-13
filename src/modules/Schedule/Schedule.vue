@@ -6,49 +6,72 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12 appointment-card">
-              <v-title class="appointment-title">Agendamento de Consulta</v-title>
+              <v-card-title class="appointment-title">Agendamento de Consulta</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="scheduleAppointment">
                   <div class="input-title">Especialidade:</div>
                   <v-select
                     v-model="appointment.specialty"
                     :items="specialties"
+                    item-value="value"
+                    item-text="text"
                     placeholder="Escolha a especialidade"
                     prepend-inner-icon="mdi-hospital"
                     @change="loadSpecialties"
                     required
                     outlined
                   ></v-select>
+                  
                   <div class="input-title">Data:</div>
-                  <v-select
-                    v-model="appointment.date"
-                    :items="dates"
-                    placeholder="Escolha a data"
-                    prepend-inner-icon="mdi-calendar"
-                    @change="checkAndLoadDoctors"
-                    required
-                    outlined
-                  ></v-select>
+                  <v-menu
+                    v-model="dateMenu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="appointment.date"
+                        label="Escolha a data"
+                        prepend-inner-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        required
+                        outlined
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="appointment.date"
+                      @input="dateMenu = false"
+                      :min="today"
+                    ></v-date-picker>
+                  </v-menu>
+
                   <div class="input-title">Hora:</div>
                   <v-select
                     v-model="appointment.time"
                     :items="times"
                     placeholder="Escolha a hora"
                     prepend-inner-icon="mdi-clock"
-                    @change="checkAndLoadDoctors"
                     required
                     outlined
                   ></v-select>
+
                   <div class="input-title">Médico:</div>
                   <v-select
                     v-model="appointment.doctor"
                     :items="doctors"
+                    item-value="value"
+                    item-text="text"
                     placeholder="Escolha o médico"
                     prepend-inner-icon="mdi-account"
                     :disabled="!doctors.length"
                     required
                     outlined
                   ></v-select>
+                  
                   <v-btn type="submit" color="#2EACB2" block class="appointment-button">Agendar</v-btn>
                 </v-form>
               </v-card-text>
@@ -75,16 +98,22 @@ import Schedule from '@/modules/Schedule/entities/schedule.entity';
   },
 })
 export default class ScheduleAppointment extends Vue {
+  dateMenu = false;
+  today = new Date().toISOString().substr(0, 10); // Data atual para limitar no calendário
+
   appointment: Schedule = {
     specialty: '',
     date: '',
     time: '',
     doctor: '',
   };
-  specialties: Array<{ text: string, value: string }> = [];
-  dates: string[] = []; // Você pode preencher as datas conforme necessário
-  times: string[] = []; // Você pode preencher os horários conforme necessário
-  doctors: Array<{ text: string, value: string }> = [];
+  
+  specialties: Array<{ text: string, value: number }> = [];
+  times: string[] = [
+    '08:00', '09:00', '10:00', '11:00',
+    '13:00', '14:00', '15:00', '16:00',
+  ]; // Horários mockados
+  doctors: Array<{ text: string, value: number }> = [];
 
   private scheduleService = new ScheduleService();
 
@@ -108,13 +137,13 @@ export default class ScheduleAppointment extends Vue {
     const { specialty, date, time } = this.appointment;
 
     if (specialty && date && time) {
-      this.loadAvailableDoctors(specialty, date, time);
+      this.loadAvailableDoctors(Number(specialty), date, time);
     }
   }
 
-  async loadAvailableDoctors(specialty: string, date: string, time: string) {
+  async loadAvailableDoctors(specialtyId: number, date: string, startTime: string) {
     try {
-      const response = await this.scheduleService.getAvailableDoctors(Number(specialty), date, time);
+      const response = await this.scheduleService.getAvailableDoctors(specialtyId, date, startTime);
       this.doctors = response.map((doctor: any) => ({
         text: doctor.name,
         value: doctor.id,
@@ -136,14 +165,13 @@ export default class ScheduleAppointment extends Vue {
     try {
       const response = await this.scheduleService.createAppointment(Number(doctor), Number(specialty), date, time);
       console.log('Agendamento realizado com sucesso:', response);
-      // Adicione lógica para notificar o usuário do sucesso
     } catch (error) {
       console.error('Erro ao agendar consulta:', error);
-      // Adicione lógica para notificar o usuário do erro
     }
   }
 }
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');

@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <v-app id="inspire">
     <NavBar />
     <v-main>
@@ -53,7 +53,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
-import CheckPatientService from '@/modules/CheckScheduling/services/check-scheduling.service'; // Importa o serviço modificado
+import CheckSchedulingService from '@/modules/CheckScheduling/services/check-scheduling.service'; // Corrigido o nome do serviço
 import CheckSchedulingEntity from '@/modules/CheckScheduling/entities/check-scheduling.entity';
 
 @Component({
@@ -67,7 +67,7 @@ export default class CheckScheduling extends Vue {
 
   async mounted() {
     try {
-      this.appointments = await CheckPatientService.fetchSchedules(); // Usa o novo serviço
+      this.appointments = await CheckSchedulingService.fetchSchedules(); // Usa o novo serviço
     } catch (error) {
       console.error('Erro ao buscar consultas:', error);
     }
@@ -186,4 +186,4 @@ export default class CheckScheduling extends Vue {
     margin: 0 10px;
   }
 }
-</style> -->
+</style>

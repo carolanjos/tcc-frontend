@@ -22,9 +22,9 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/Login/ForgotPassword/ForgotPassword.vue')
   },
   {
-    path: '/reset-password',
+    path: '/reset-password/:uidb64/:token',
     name: 'ResetPassword',
-    component: () => import('@/modules/Login/SetPassword/SetPassword.vue')
+    component: () => import('@/modules/Login/ResetPassword/ResetPassword.vue')
   },
   {
     path: '/register',
