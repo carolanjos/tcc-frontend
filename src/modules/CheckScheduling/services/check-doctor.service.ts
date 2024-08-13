@@ -1,5 +1,3 @@
-// src/modules/CheckScheduling/services/check-doctor.service.ts
-
 import http from '@/services/http.service';
 import LocalStorageService from '@/services/localStorage.service';
 import DoctorCheck from '@/modules/CheckScheduling/entities/check-doctor.entity';
@@ -13,7 +11,7 @@ class CheckDoctorService {
     }
 
     try {
-      const response = await http.get('/doctor/appointments', {
+      const response = await http.get('/doctor/patients', {
         headers: {
           'Authorization': `Token ${token}`,
         },
@@ -22,12 +20,13 @@ class CheckDoctorService {
       return response.data.map((appointment: any) =>
         new DoctorCheck(
           appointment.id,
+          appointment.name,
           appointment.date,
-          appointment.time,
+          appointment.start_time,
           appointment.patient,
           appointment.specialty,
           appointment.status,
-          appointment.attended
+          appointment.attended,
         )
       );
     } catch (error) {
@@ -51,6 +50,60 @@ class CheckDoctorService {
       });
     } catch (error) {
       console.error('Erro ao salvar presenças:', error);
+      throw error;
+    }
+  }
+
+  public async markAppointmentAsDone(appointment_id: number): Promise<string> {
+    const token = LocalStorageService.getItem('authToken');
+  
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+  
+    try {
+      console.log(`Marking appointment as done with ID: ${appointment_id}`);
+      
+      const response = await http.patch(
+        '/doctor/done',
+        { appointment_id: appointment_id },
+        {
+          headers: {
+            'Authorization': `Token ${token}`,
+          },
+        }
+      );
+  
+      return response.data.message;
+    } catch (error) {
+      console.error('Erro ao marcar consulta como realizada:', error);
+      throw error;
+    }
+  }
+  
+  public async markAppointmentAsCanceled(appointment_id: number): Promise<string> {
+    const token = LocalStorageService.getItem('authToken');
+  
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+  
+    try {
+      console.log(`Canceling appointment with ID: ${appointment_id}`);
+      
+      const response = await http.patch(
+        '/doctor/cancel',
+        { appointment_id: appointment_id },
+        {
+          headers: {
+            'Authorization': `Token ${token}`,
+          },
+        }
+      );
+  
+      return response.data.message;
+    } catch (error) {
+      console.error('Erro ao cancelar consulta:', error);
       throw error;
     }
   }

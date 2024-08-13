@@ -44,7 +44,7 @@
     name = '';
 
     mounted() {
-      this.name = LocalStorageService.getItem('userName') || '';
+      this.name = LocalStorageService.getItem('name') || '';
       console.log('Nome recuperado do LocalStorage:', this.name); // Verifique o nome recuperado
     }
 
@@ -53,7 +53,7 @@
     }
   
     reagendarConsulta() {
-      this.$router.push('/reagendar-consulta');
+      this.$router.push('/reschedule');
     }
   
     listarConsultas() {
@@ -67,6 +67,8 @@
   </script>
   
   <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
   .container {
     padding: 80px 10px;
   }
@@ -77,6 +79,8 @@
     box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     text-align: center;
+    font-family: 'Montserrat';
+    color: #1c7e83;
   }
   
   .dashboard-button {

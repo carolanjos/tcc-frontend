@@ -2,27 +2,30 @@
 
 export default class DoctorCheck {
   id: number;
-  date: string;
-  time: string;
-  patient: string;
+  name: string;
   specialty: string;
-  status: string;
+  start_time: string;
+  end_time: string;
+  date: string;
+  status: string
   attended: boolean;
 
   constructor(
     id: number,
-    date: string,
-    time: string,
-    patient: string,
+    name: string,
     specialty: string,
+    start_time: string,
+    end_time: string,
+    date: string,
     status: string,
-    attended: boolean
+    attended: boolean,
   ) {
     this.id = id;
-    this.date = date;
-    this.time = time;
-    this.patient = patient;
+    this.name = name;
     this.specialty = specialty;
+    this.start_time = start_time;
+    this.end_time = end_time;
+    this.date = date;
     this.status = status;
     this.attended = attended;
   }

@@ -25,10 +25,10 @@
                         <td class="text-center">{{ appointment.specialty }}</td>
                         <td class="text-center">{{ appointment.doctor }}</td>
                         <td class="text-center">{{ appointment.date }}</td>
-                        <td class="text-center">{{ appointment.time }}</td>
+                        <td class="text-center">{{ appointment.start_time }}</td>
                         <td class="text-center" :class="statusClass(appointment.status)">{{ appointment.status }}</td>
                         <td class="text-center">
-                          <v-btn icon @click="rescheduleAppointment(index)">
+                          <v-btn icon @click="openRescheduleModal(index)">
                             <v-icon color="#2EACB2">mdi-calendar-edit</v-icon>
                           </v-btn>
                           <v-btn icon @click="cancelAppointment(index)">
@@ -44,6 +44,15 @@
           </v-flex>
         </v-layout>
       </v-container>
+    
+      <!-- Componente Modal -->
+      <RescheduleModal
+        :dialog="showRescheduleModal"
+        :appointmentId="selectedAppointmentId"
+        @close="closeRescheduleModal"
+        @reschedule="handleReschedule"
+      />
+
     </v-main>
     <Footer />
   </v-app>
@@ -53,52 +62,90 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
-import CheckSchedulingService from '@/modules/CheckScheduling/services/check-scheduling.service'; // Corrigido o nome do serviço
+import RescheduleModal from '@/modules/CheckScheduling/RescheduleModal.vue';
+import CheckSchedulingService from '@/modules/CheckScheduling/services/check-scheduling.service';
 import CheckSchedulingEntity from '@/modules/CheckScheduling/entities/check-scheduling.entity';
 
 @Component({
   components: {
     NavBar,
-    Footer
+    Footer,
+    RescheduleModal,
   }
 })
 export default class CheckScheduling extends Vue {
   appointments: CheckSchedulingEntity[] = [];
+  showRescheduleModal = false;
+  selectedAppointmentId = 0;
 
   async mounted() {
     try {
-      this.appointments = await CheckSchedulingService.fetchSchedules(); // Usa o novo serviço
+      this.appointments = await CheckSchedulingService.fetchSchedules();
     } catch (error) {
       console.error('Erro ao buscar consultas:', error);
     }
   }
 
-  statusClass(status: string) {
-    switch (status) {
-      case 'Agendada':
-        return 'status-scheduled';
-      case 'Remarcada':
-        return 'status-rescheduled';
-      case 'Cancelada':
-        return 'status-canceled';
-      case 'Realizada':
-        return 'status-done';
-      default:
-        return '';
+  openRescheduleModal(index: number) {
+    this.selectedAppointmentId = this.appointments[index].id;
+    this.showRescheduleModal = true;
+  }
+
+  closeRescheduleModal() {
+    this.showRescheduleModal = false;
+  }
+
+  statusClass(status: string): string {
+    // Define the class based on the status
+    if (status === 'Remarcada') {
+      return 'status-rescheduled';
+    } else if (status === 'Cancelada') {
+      return 'status-canceled';
+    } else if (status === 'Concluída') {
+      return 'status-done';
+    } else {
+      return 'status-scheduled';
     }
   }
 
-  rescheduleAppointment(index: number) {
-    alert(`Remarcar consulta de ${this.appointments[index].doctor}`);
-    // Adicione aqui a lógica para remarcar a consulta
+  async handleReschedule({ appointmentId, newDate, newStartTime }: { appointmentId: number, newDate: string, newStartTime: string }) {
+    try {
+      const message = await CheckSchedulingService.rescheduleSchedule(appointmentId, newDate, newStartTime);
+      alert(message);
+
+      // Atualiza a data e hora da consulta na interface
+      const appointment = this.appointments.find(app => app.id === appointmentId);
+      if (appointment) {
+        appointment.date = newDate;
+        appointment.start_time = newStartTime;
+        appointment.status = 'Remarcada';
+      }
+
+      this.closeRescheduleModal();
+    } catch (error) {
+      console.error('Erro ao reagendar a consulta:', error);
+      alert('Houve um erro ao tentar reagendar a consulta. Por favor, tente novamente.');
+    }
   }
 
-  cancelAppointment(index: number) {
-    alert(`Cancelar consulta de ${this.appointments[index].doctor}`);
-    // Adicione aqui a lógica para cancelar a consulta
+  async cancelAppointment(index: number) {
+    const appointmentId = this.appointments[index].id;
+    try {
+      const confirmation = confirm(`Tem certeza que deseja cancelar a consulta com ${this.appointments[index].doctor}?`);
+      if (confirmation) {
+        const message = await CheckSchedulingService.cancelSchedule(appointmentId);
+        alert(message);
+        // Atualiza o status da consulta para "Cancelada" na interface
+        this.appointments[index].status = 'Cancelada';
+      }
+    } catch (error) {
+      console.error('Erro ao cancelar a consulta:', error);
+      alert('Houve um erro ao tentar cancelar a consulta. Por favor, tente novamente.');
+    }
   }
 }
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
