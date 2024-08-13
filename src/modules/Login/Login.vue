@@ -88,25 +88,31 @@
       localStorage.setItem('token', access);
       localStorage.setItem('role', role);
 
-        switch (role) {
-            case 'medico':
-            this.$router.push('/dashboard-doctor');
-            break;
-            case 'paciente':
-            this.$router.push('/dashboard-patient');
-            break;
-            case 'admin':
-            this.$router.push('/dashboard-admin');
-            break;
-            default:
-            this.errorMessage = 'Role desconhecido. Contate o suporte.';
-        }
-        } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        this.errorMessage = 'Falha no login. Verifique suas credenciais e tente novamente.';
-        }
+      let targetRoute = '';
+      switch (role) {
+        case 'medico':
+          targetRoute = '/dashboard-doctor';
+          break;
+        case 'paciente':
+          targetRoute = '/dashboard-patient';
+          break;
+        case 'admin':
+          targetRoute = '/dashboard-admin';
+          break;
+        default:
+          this.errorMessage = 'Role desconhecido. Contate o suporte.';
+          return;
+      }
+
+      if (this.$route.path !== targetRoute) {
+        this.$router.push(targetRoute);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      this.errorMessage = 'Falha no login. Verifique suas credenciais e tente novamente.';
     }
   }
+}
   </script>
   
   <style scoped>

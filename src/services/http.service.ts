@@ -5,7 +5,7 @@ import LocalStorageService from '@/services/localStorage.service';
 
 const http = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
-  timeout: 1000,
+  timeout: 30000,
 });
 
 // Adiciona um interceptor de requisição para incluir o token de autenticação

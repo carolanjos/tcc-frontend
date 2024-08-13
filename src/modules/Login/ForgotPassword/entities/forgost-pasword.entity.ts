@@ -1,7 +1,6 @@
-export default class ForgotPasswordRequest {
-    email: string = '';
-
-    constructor() {
-        // A inicialização já foi feita na declaração da propriedade
-    }
+/* eslint-disable */
+type ForgotPasswordRequest = {
+    email: string;
 }
+
+export default ForgotPasswordRequest;

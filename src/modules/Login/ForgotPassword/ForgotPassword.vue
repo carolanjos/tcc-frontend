@@ -44,6 +44,7 @@ import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
 import PasswordRecoveryService from '@/modules/Login/ForgotPassword/services/forgot-password.service';
 import ForgotPasswordRequest from '@/modules/Login/ForgotPassword/entities/forgost-pasword.entity';
+import axios from 'axios';
 
 @Component({
   components: {
@@ -53,18 +54,27 @@ import ForgotPasswordRequest from '@/modules/Login/ForgotPassword/entities/forgo
 })
 export default class ForgotPassword extends Vue {
   private email = '';
-
+  private timeout = 5000;
+  
   private async submit() {
     const data: ForgotPasswordRequest = {
       email: this.email,
     };
+    console.log('data: AQUUUUUUUUUI', data);
+    // try {
 
-    try {
-      await PasswordRecoveryService.sendResetPasswordLink(data);
-      this.$router.push('/login');
-    } catch (error) {
-      console.error('Erro ao enviar o email:', error);
-    }
+    await PasswordRecoveryService.sendResetPasswordLink(data);
+    alert('Um link de redefinição de senha foi enviado ao e-mail cadastrado.');
+    this.$router.push('/login');
+    // } catch (error) {
+    //   console.error('Erro ao enviar o email:', error);
+    // }
+  }
+
+  private async someFunction() {
+    setTimeout(() => {
+      console.log('Timeout reached');
+    }, this.timeout);
   }
 }
 </script>

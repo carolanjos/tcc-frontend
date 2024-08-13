@@ -54,45 +54,94 @@
   import ResetPasswordRequest from '@/modules/Login/ResetPassword/entities/reset-password.entity';
   import Footer from '@/global/footer/footer.component.vue';
   import NavBar from '@/global/navbar/navbar.component.vue';
-  
+  import axios from 'axios';
+
   @Component({
     components: {
       Footer,
       NavBar,
     },
   })
+
+
   export default class ResetPassword extends Vue {
-    private uidb64 = ''; // UID base64 do usuário, capturado da rota
-    private token = '';  // Token de redefinição de senha, capturado da rota
-    private password = ''; // Nova senha
-    private password2 = ''; // Confirmação da nova senha
-  
-    private async submit() {
-      if (this.password !== this.password2) {
-        alert("As senhas não coincidem.");
-        return;
-      }
-  
-      const data: ResetPasswordRequest = {
-        password: this.password,
-        password2: this.password2,
-      };
-  
-      try {
-        await PasswordRecoveryService.resetPassword(this.uidb64, this.token, data);
-        alert("Senha redefinida com sucesso!");
-        this.$router.push('/login');
-      } catch (error) {
-        alert("Erro ao redefinir senha. Tente novamente mais tarde.");
-      }
+  private password = '';
+  private password2 = '';
+  private token = '';
+  private uid = '';
+
+  private async submit() {
+    if (this.password !== this.password2) {
+      alert('As senhas não coincidem.');
+      return;
     }
-  
-    mounted() {
-      // Captura os parâmetros da URL para uidb64 e token
-      this.uidb64 = this.$route.params.uidb64;
-      this.token = this.$route.params.token;
+
+    const data: ResetPasswordRequest = {
+      password: this.password,
+      password2: this.password2,
+      token: this.token,
+      uid: this.uid,
+    };
+
+    try {
+      await PasswordRecoveryService.resetPassword(this.uid, this.token, data);
+      alert('Senha redefinida com sucesso.');
+    } catch (error) {
+      console.error('Erro ao redefinir a senha:', error);
+      alert('Erro ao redefinir a senha.');
     }
   }
+
+  mounted() {
+    this.token = this.$route.params.token;
+    this.uid = this.$route.params.uid;
+    console.log('Token:', this.token);
+    console.log('UID:', this.uid);
+  }
+}
+
+    
+  //   try {
+  //     await PasswordRecoveryService.resetPassword(data);
+  //     alert('Senha redefinida com sucesso.');
+  //     this.$router.push('/login');
+  //   } catch (error) {
+  //     console.error('Erro ao redefinir a senha:', error);
+  //   }
+  // }
+  // export default class ResetPassword extends Vue {
+  //   private uidb64 = ''; // UID base64 do usuário, capturado da rota
+  //   private token = '';  // Token de redefinição de senha, capturado da rota
+  //   private password = ''; // Nova senha
+  //   private password2 = ''; // Confirmação da nova senha
+  
+  //   private async submit() {
+  //     if (this.password !== this.password2) {
+  //       alert("As senhas não coincidem.");
+  //       return;
+  //     }
+  
+  //     const data: ResetPasswordRequest = {
+  //       password: this.password,
+  //       password2: this.password2,
+  //     };
+      
+  //     console.log("BBBBBBBBBBBBBB",data);
+  //     try {
+  //       await PasswordRecoveryService.resetPassword(this.uidb64, this.token, data);
+  //       alert("Senha redefinida com sucesso!");
+  //       this.$router.push('/login');
+  //     } catch (error) {
+  //       alert("Erro ao redefinir senha. Tente novamente mais tarde.");
+  //     }
+  //   }
+  
+  //   mounted() {
+  //     // Captura os parâmetros da URL para uidb64 e token
+  //     this.uidb64 = this.$route.params.uidb64;
+  //     this.token = this.$route.params.token;
+  //   }
+  // }
   </script>
   
   <style>
