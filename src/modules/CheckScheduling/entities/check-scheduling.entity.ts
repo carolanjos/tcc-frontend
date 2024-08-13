@@ -3,7 +3,7 @@ export default class CheckSchedulingEntity {
     specialty: string;
     doctor: string;
     date: string;
-    time: string;
+    start_time: string;
     status: string;
 
     constructor(
@@ -11,14 +11,14 @@ export default class CheckSchedulingEntity {
       specialty: string,
       doctor: string,
       date: string,
-      time: string,
+      start_time: string,
       status: string
     ) {
       this.id = id;
       this.specialty = specialty;
       this.doctor = doctor;
       this.date = date;
-      this.time = time;
+      this.start_time = start_time;
       this.status = status;
     }
 }

@@ -6,7 +6,7 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm10 md8>
             <v-card class="elevation-12 agenda-card">
-              <v-card-title class="agenda-title">Lista de Agendas e Pacientes</v-card-title>
+              <v-card-title class="agenda-title">Lista de Pacientes Agendados</v-card-title>
               <v-card-text>
                 <v-simple-table class="agenda-table">
                   <template v-slot:default>
@@ -23,33 +23,35 @@
                     <tbody>
                       <tr v-for="(appointment, index) in agendas" :key="index">
                         <td class="text-center">{{ appointment.date }}</td>
-                        <td class="text-center">{{ appointment.time }}</td>
-                        <td class="text-center">{{ appointment.patient }}</td>
+                        <td class="text-center">{{ appointment.start_time }}</td>
+                        <td class="text-center">{{ appointment.name }}</td>
                         <td class="text-center">{{ appointment.specialty }}</td>
-                        <td class="text-center" :class="statusClass(appointment.status)">{{ appointment.status }}</td>
+                        <td class="text-center" :class="statusClass(appointment.status)">
+                          {{ appointment.status }}
+                        </td>
                         <td class="text-center">
                           <div class="presence-options">
                             <v-btn
-                              :class="{'selected': appointment.attended}"
-                              @click="appointment.attended = true"
+                              :class="{ 'selected': appointment.status === 'realizada' }"
+                              @click="markAsAttended(appointment.id, index)"
                               class="presence-btn"
                             >
                               Sim
                             </v-btn>
                             <v-btn
-                              :class="{'selected': appointment.attended}"
-                              @click="appointment.attended = !appointment.attended"
+                              :class="{ 'selected': appointment.status === 'cancelado' }"
+                              @click="markAsNotAttended(appointment.id, index)"
                               class="presence-btn"
                             >
                               Não
                             </v-btn>
                           </div>
-                      </td>
+                        </td>
                       </tr>
                     </tbody>
                   </template>
                 </v-simple-table>
-                <v-btn color="#2EACB2" class="mt-4" @click="saveAttendances">Salvar Presenças</v-btn>
+                <v-btn color="#2EACB2" center class="btnPresence" @click="saveAttendances">Salvar Presenças</v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -60,7 +62,6 @@
   </v-app>
 </template>
 
-  
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/global/navbar/navbar.component.vue';
@@ -77,39 +78,64 @@ import DoctorCheck from '@/modules/CheckScheduling/entities/check-doctor.entity'
 export default class AgendaList extends Vue {
   agendas: DoctorCheck[] = [];
 
-  // Use diretamente a instância do serviço
-  private checkDoctorService = CheckDoctorService;
+  private checkSchedulingService = CheckDoctorService;
 
   async mounted() {
     try {
-      this.agendas = await this.checkDoctorService.fetchAgendas();
+      this.agendas = await this.checkSchedulingService.fetchAgendas();
     } catch (error) {
       console.error('Erro ao buscar agendas:', error);
     }
   }
 
   statusClass(status: string) {
-    switch (status) {
-      case 'Agendada':
+    switch (status.toLowerCase()) {
+      case 'agendado':
         return 'status-scheduled';
-      case 'Remarcada':
+      case 'remarcado':
         return 'status-rescheduled';
-      case 'Cancelada':
+      case 'cancelado':
         return 'status-canceled';
-      case 'Realizada':
+      case 'realizada':
         return 'status-done';
+      case 'não realizada':
+        return 'status-not-done';
       default:
         return '';
     }
   }
 
+  async markAsAttended(appointment_id: number, index: number) {
+    console.log(`Marking appointment ID ${appointment_id} as attended`); 
+    try {
+      const response = await this.checkSchedulingService.markAppointmentAsDone(appointment_id);
+      console.log('Full API response:', response); // Log da resposta completa
+      this.agendas[index].status = 'realizada';
+    } catch (error: any) {
+      console.error('Erro ao marcar como realizada:', error);
+      if (error.response) {
+        console.error('Erro detalhado:', error.response.data);
+      }
+    }
+  }
+
+  async markAsNotAttended(appointment_id: number, index: number) {
+    console.log(`Marking appointment ID ${appointment_id} as not attended`); 
+    try {
+      const response = await this.checkSchedulingService.markAppointmentAsCanceled(appointment_id);
+      console.log('Full API response:', response); // Log da resposta completa
+      this.agendas[index].status = 'cancelado';
+    } catch (error: any) {
+      console.error('Erro ao marcar como cancelada:', error);
+      if (error.response) {
+        console.error('Erro detalhado:', error.response.data);
+      }
+    }
+  }
+
   async saveAttendances() {
     try {
-      const updatedAgendas = this.agendas.map(agenda => ({
-        ...agenda,
-        attended: agenda.attended.toString() === 'Sim',
-      }));
-      await this.checkDoctorService.saveAttendances(updatedAgendas);
+      await this.checkSchedulingService.saveAttendances(this.agendas);
       console.log('Presenças salvas com sucesso!');
     } catch (error) {
       console.error('Erro ao salvar presenças:', error);
@@ -117,111 +143,77 @@ export default class AgendaList extends Vue {
   }
 }
 </script>
-  
-  <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-  
-  * {
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .container {
-    padding: 60px 20px;
-  }
-  
-  .agenda-card {
-    padding: 40px 20px;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    text-align: center;
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .agenda-title {
-    font-size: 24px;
-    text-align: center;
-    color: #2EACB2;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .agenda-table thead {
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  
-  .agenda-table th, .agenda-table td {
-    padding: 10px;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .text-center {
-    text-align: center;
-  }
-  
-  .agenda-table tbody tr {
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .v-btn {
-    transition: background-color 0.3s ease;
-    background-color: #2EACB2;
-    color: #fff;
-  }
-  
-  .v-btn:hover {
-    background-color: #1c7e83;
-  }
-  
-  .status-scheduled {
-    color: #2EACB2;
-  }
-  
-  .status-rescheduled {
-    color: #FFA000;
-  }
-  
-  .status-canceled {
-    color: #ff5252;
-  }
-  
-  .status-done {
-    color: #4CAF50;
-  }
-  .presence-options {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+
+
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
 }
 
-.presence-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  background-color: #f0f0f0;
-  color: #333;
+.container {
+  padding: 20px;
+}
+
+.agenda-card {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.agenda-title {
+  font-size: 24px;
   font-weight: bold;
-  text-transform: uppercase;
+  color: #1c7e83;
+}
+
+.btnPresence {
+  background-color: #2EACB2;
+  color: white;
+  justify-items: center;
+}
+
+.agenda-table {
+  margin-top: 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.presence-options {
+  display: flex;
+  justify-content: space-around;
 }
 
 .presence-btn.selected {
-  background-color: #2EACB2;
+  background-color: #1c7e83;
   color: white;
 }
 
-.presence-btn:not(.selected):hover {
-  background-color: #dcdcdc;
+.mt-4 {
+  margin-top: 16px;
 }
 
-  
-  @media (max-width: 768px) {
-    .agenda-card {
-      width: 100%;
-      margin: 0 10px;
-    }
-  }
-  </style>
-  
+.status-scheduled {
+  color: blue;
+}
+
+.status-rescheduled {
+  color: orange;
+}
+
+.status-canceled {
+  color: red;
+}
+
+.status-done {
+  color: green;
+}
+
+.status-not-done {
+  color: gray;
+}
+</style>

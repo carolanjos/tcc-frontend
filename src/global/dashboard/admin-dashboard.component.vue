@@ -6,7 +6,7 @@
           <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
               <v-card class="elevation-12 dashboard-card">
-                <v-title class="dashboard-title">Bem vindo(a) {{  name  }}</v-title>
+                <v-title class="dashboard-title"><span class="user-name">{{ name }}Seja bem vindo(a)</span></v-title>
                 <v-card-text>
                   <v-subtitle class="dashboard-subtitle">Escolha a opção que deseja</v-subtitle>
                     <v-btn block color="#2EACB2" class="dashboard-button" @click="listarUsuarios">Listar usuários</v-btn>
@@ -64,6 +64,8 @@
   </script>
   
   <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
   .container {
     padding: 80px 10px;
   }
@@ -86,6 +88,8 @@
     font-size: 25px;
     text-align: center;
     padding: 25px 15px;
+    color: #1c7e83;
+    font-family: 'Montserrat';
   }
   
   .dashboard-subtitle {

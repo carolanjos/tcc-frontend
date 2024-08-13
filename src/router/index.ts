@@ -100,6 +100,11 @@ const routes: Array<RouteConfig> = [
     path: '/edit-profile',
     name: 'EditProfile',
     component: () => import('@/modules/Register/EditProfile/EditProfile.vue')
+  },
+  {
+    path: '/reschedule',
+    name: 'RescheduleModal',
+    component: () => import('@/modules/CheckScheduling/RescheduleModal.vue')
   }
 
 ]

@@ -50,7 +50,7 @@
   
   <script lang="ts">
   import { Vue, Component } from 'vue-property-decorator';
-  import PasswordRecoveryService from '@/modules/Login/ForgotPassword/services/forgot-password.service';
+  import PasswordRecoveryService from '@/modules/Login/ResetPassword/services/reset-password.service';
   import ResetPasswordRequest from '@/modules/Login/ResetPassword/entities/reset-password.entity';
   import Footer from '@/global/footer/footer.component.vue';
   import NavBar from '@/global/navbar/navbar.component.vue';

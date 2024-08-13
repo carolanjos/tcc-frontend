@@ -10,6 +10,7 @@ class PasswordRecoveryService {
             console.error('Erro ao redefinir a senha:', error);
             throw error; // Relança o erro para ser tratado no componente
         }
+        return Promise.resolve();
     }
 }
 

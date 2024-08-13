@@ -41,7 +41,7 @@
     $router!: VueRouter; // Add $router property
   
     mounted() {
-      const storedName = LocalStorageService.getItem('userName') || '';
+      const storedName = LocalStorageService.getItem('name') || '';
       console.log('Nome recuperado do LocalStorage:', storedName);
       this.name = storedName;
       this.$forceUpdate(); // Força a atualização da interface
@@ -58,6 +58,8 @@
   </script>
   
   <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
   .container {
     padding: 80px 10px;
   }
@@ -68,6 +70,7 @@
     box-shadow: 0 5px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     text-align: center;
+    font-family: 'Montserrat';
   }
   
   .dashboard-button {
@@ -86,6 +89,7 @@
     font-size: 25px;
     text-align: center;
     padding: 25px 15px;
+    color: #1c7e83;
   }
   
   .dashboard-subtitle {
