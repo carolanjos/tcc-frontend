@@ -27,6 +27,7 @@ class CheckSchedulingService {
 
       // Busca das especialidades
       const specialtiesResponse = await http.get('/patient/list-specialities-app', {
+
         headers: {
           'Authorization': `Token ${token}`,
         },
@@ -34,8 +35,8 @@ class CheckSchedulingService {
 
       // Mapear os nomes dos médicos e especialidades
       const doctorNames = doctorsResponse.data.map((item: any) => item.doctor);
-      const specialties = specialtiesResponse.data.map((item: any) => item.speciality);
-
+      const specialties = specialtiesResponse.data.map((i: any) => i.specialty);
+      
       // Associar os nomes dos médicos e especialidades aos agendamentos
       return schedulesResponse.data.map((schedule: any, index: number) =>
         new CheckSchedulingEntity(
