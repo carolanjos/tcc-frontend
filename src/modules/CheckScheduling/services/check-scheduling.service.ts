@@ -11,17 +11,37 @@ class CheckSchedulingService {
     }
 
     try {
-      const response = await http.get('/patient/list-appoinments', {
+      // Busca de agendamentos
+      const schedulesResponse = await http.get('/patient/list-appoinments', {
         headers: {
           'Authorization': `Token ${token}`,
         },
       });
 
-      return response.data.map((schedule: any) =>
+      // Busca dos nomes dos médicos
+      const doctorsResponse = await http.get('/patient/list-doctors-patient', {
+        headers: {
+          'Authorization': `Token ${token}`,
+        },
+      });
+
+      // Busca das especialidades
+      const specialtiesResponse = await http.get('/patient/list-specialities-app', {
+        headers: {
+          'Authorization': `Token ${token}`,
+        },
+      });
+
+      // Mapear os nomes dos médicos e especialidades
+      const doctorNames = doctorsResponse.data.map((item: any) => item.doctor);
+      const specialties = specialtiesResponse.data.map((item: any) => item.speciality);
+
+      // Associar os nomes dos médicos e especialidades aos agendamentos
+      return schedulesResponse.data.map((schedule: any, index: number) =>
         new CheckSchedulingEntity(
           schedule.id,
-          schedule.specialty,
-          schedule.doctor,
+          specialties[index] || 'Especialidade não encontrada',
+          doctorNames[index] || 'Médico não encontrado',
           schedule.date,
           schedule.start_time,
           schedule.status
@@ -32,6 +52,7 @@ class CheckSchedulingService {
       throw error;
     }
   }
+
 
   public async saveSchedules(updatedSchedules: CheckSchedulingEntity[]): Promise<void> {
     const token = LocalStorageService.getItem('authToken');

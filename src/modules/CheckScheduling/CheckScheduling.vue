@@ -44,12 +44,11 @@
           </v-flex>
         </v-layout>
       </v-container>
-    
-      <!-- Componente Modal -->
+
       <RescheduleModal
-        :dialog="showRescheduleModal"
+        :dialog.sync="showRescheduleModal"
         :appointmentId="selectedAppointmentId"
-        @close="closeRescheduleModal"
+        @close="showRescheduleModal = false"
         @reschedule="handleReschedule"
       />
 
@@ -62,15 +61,15 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NavBar from '@/global/navbar/navbar.component.vue';
 import Footer from '@/global/footer/footer.component.vue';
-import RescheduleModal from '@/modules/CheckScheduling/RescheduleModal.vue';
 import CheckSchedulingService from '@/modules/CheckScheduling/services/check-scheduling.service';
 import CheckSchedulingEntity from '@/modules/CheckScheduling/entities/check-scheduling.entity';
+import RescheduleModal from '@/modules/CheckScheduling/RescheduleModal.vue';
 
 @Component({
   components: {
     NavBar,
     Footer,
-    RescheduleModal,
+    RescheduleModal, // Registra o componente modal
   }
 })
 export default class CheckScheduling extends Vue {
@@ -86,26 +85,24 @@ export default class CheckScheduling extends Vue {
     }
   }
 
+  statusClass(status: string) {
+    switch (status) {
+      case 'Agendada':
+        return 'status-scheduled';
+      case 'Remarcada':
+        return 'status-rescheduled';
+      case 'Cancelada':
+        return 'status-canceled';
+      case 'Realizada':
+        return 'status-done';
+      default:
+        return '';
+    }
+  }
+
   openRescheduleModal(index: number) {
     this.selectedAppointmentId = this.appointments[index].id;
     this.showRescheduleModal = true;
-  }
-
-  closeRescheduleModal() {
-    this.showRescheduleModal = false;
-  }
-
-  statusClass(status: string): string {
-    // Define the class based on the status
-    if (status === 'Remarcada') {
-      return 'status-rescheduled';
-    } else if (status === 'Cancelada') {
-      return 'status-canceled';
-    } else if (status === 'Concluída') {
-      return 'status-done';
-    } else {
-      return 'status-scheduled';
-    }
   }
 
   async handleReschedule({ appointmentId, newDate, newStartTime }: { appointmentId: number, newDate: string, newStartTime: string }) {
@@ -120,117 +117,102 @@ export default class CheckScheduling extends Vue {
         appointment.start_time = newStartTime;
         appointment.status = 'Remarcada';
       }
-
-      this.closeRescheduleModal();
     } catch (error) {
       console.error('Erro ao reagendar a consulta:', error);
       alert('Houve um erro ao tentar reagendar a consulta. Por favor, tente novamente.');
     }
   }
 
-  async cancelAppointment(index: number) {
-    const appointmentId = this.appointments[index].id;
-    try {
-      const confirmation = confirm(`Tem certeza que deseja cancelar a consulta com ${this.appointments[index].doctor}?`);
-      if (confirmation) {
-        const message = await CheckSchedulingService.cancelSchedule(appointmentId);
-        alert(message);
-        // Atualiza o status da consulta para "Cancelada" na interface
-        this.appointments[index].status = 'Cancelada';
-      }
-    } catch (error) {
-      console.error('Erro ao cancelar a consulta:', error);
-      alert('Houve um erro ao tentar cancelar a consulta. Por favor, tente novamente.');
-    }
+  cancelAppointment(index: number) {
+    alert(`Cancelar consulta de ${this.appointments[index].doctor}`);
+    // Adicione aqui a lógica para cancelar a consulta
   }
 }
 </script>
+
+<style scoped>
+/* Adicione estilos aqui, se necessário */
+</style>
 
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 * {
-  font-family: 'Poppins', sans-serif;
-}
-
-.container {
-  padding: 60px 20px;
-}
-
-.consultation-card {
-  padding: 40px 20px;
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  text-align: center;
-  transition: box-shadow 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .consultation-title {
-  font-size: 30px;
-  text-align: center;
-  color: #2EACB2;
+  color: #1c7e83;
   font-weight: bold;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.consultation-table thead {
-  background-color: #f0f0f0;
-  text-align: center;
   font-size: 30px;
-  text-align: center;
-  padding: 30px;
-  color: #2EACB2;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
-.consultation-table th, .consultation-table td {
-  padding: 10px;
-  font-size: 16px;
-  color: #333;
+
+.container {
+  padding: 40px;
+}
+
+.agenda-card {
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.agenda-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1c7e83;
+}
+
+.btnPresence {
+  background-color: #2EACB2;
+  color: white;
+  justify-items: center;
+}
+
+.agenda-table {
+  margin-top: 20px;
 }
 
 .text-center {
   text-align: center;
-  font-size: 30px;
-  padding: 30px;
-  color: #2EACB2;
 }
 
-.consultation-table tbody tr {
-  border-bottom: 1px solid #e0e0e0;
+.presence-options {
+  display: flex;
+  justify-content: space-around;
 }
 
-.v-btn {
-  transition: background-color 0.3s ease;
-}
-
-.v-btn:hover {
+.presence-btn.selected {
   background-color: #1c7e83;
-  color: #fff !important;
+  color: white;
+}
+
+.mt-4 {
+  margin-top: 16px;
 }
 
 .status-scheduled {
-  color: #2EACB2;
+  color: blue;
 }
 
 .status-rescheduled {
-  color: #FFA000;
+  color: orange;
 }
 
 .status-canceled {
-  color: #ff5252;
+  color: red;
 }
 
 .status-done {
-  color: #4CAF50;
+  color: green;
 }
 
-@media (max-width: 768px) {
-  .consultation-card {
-    width: 100%;
-    margin: 0 10px;
-  }
+.status-not-done {
+  color: gray;
 }
 </style>
