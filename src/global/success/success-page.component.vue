@@ -40,7 +40,7 @@
   export default class SuccessPage extends Vue {
     newAppointment() {
       // Navegar para a página de novo agendamento
-      this.$router.push('/schedule-appointment');
+      this.$router.push('/schedule');
     }
   
     myAppointments() {

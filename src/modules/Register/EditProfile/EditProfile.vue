@@ -52,9 +52,10 @@
                 <v-select
                   v-model="userProfile.specialties"
                   :items="specialties"
-                  label="Especialidades"
+                  placeholder="Especialidades"
                   item-text="name"
                   item-value="id"
+                  :deletable-chips="userProfile.specialties.length>1"
                   multiple
                   chips
                   class="input-title"
@@ -94,18 +95,16 @@ export default class EditProfile extends Vue {
   userProfile: any = {}; 
   originalProfile: any = {}; 
 
-  async mounted() {
-    try {
+  async created() {
+  try {
       const role = await AuthService.getRole();
       this.isDoctor = role === 'medico';
 
-      const profileData = await EditProfileService.fetchUserProfile();
-      this.userProfile = { ...profileData };
-      this.originalProfile = { ...profileData }; // Armazenar o perfil original para comparação
-      
+      this.userProfile = await EditProfileService.fetchUserProfile();
+
       if (this.isDoctor) {
-        this.specialties = await EditProfileService.listSpecialties();
-        this.userProfile.specialties = profileData.specialties.map((specialty: any) => specialty.id);
+        const specialtiesFromList = await EditProfileService.listSpecialties();
+        this.specialties = specialtiesFromList;
       }
     } catch (error) {
       console.error('Erro ao buscar perfil do usuário:', error);
@@ -114,30 +113,30 @@ export default class EditProfile extends Vue {
 
   async updateProfile() {
     try {
-      const updatedProfile: any = {};
+      // const updatedProfile: any = {};
 
-      for (const key in this.userProfile) {
-        if (JSON.stringify(this.userProfile[key]) !== JSON.stringify(this.originalProfile[key])) {
-          updatedProfile[key] = this.userProfile[key];
-        }
-      }
+      // for (const key in this.userProfile) {
+      //   if (JSON.stringify(this.userProfile[key]) !== JSON.stringify(this.originalProfile[key])) {
+      //     updatedProfile[key] = this.userProfile[key];
+      //   }
+      // }
 
-      if (this.isDoctor) {
-        if (this.userProfile.crm !== this.originalProfile.crm) {
-          updatedProfile.crm = this.userProfile.crm;
-        }
-        if (JSON.stringify(this.userProfile.specialties) !== JSON.stringify(this.originalProfile.specialties)) {
-          updatedProfile.specialties = this.userProfile.specialties;
-        }
-      }
+      // if (this.isDoctor) {
+      //   if (this.userProfile.crm !== this.originalProfile.crm) {
+      //     updatedProfile.crm = this.userProfile.crm;
+      //   }
+      //   if (JSON.stringify(this.userProfile.specialties) !== JSON.stringify(this.originalProfile.specialties)) {
+      //     updatedProfile.specialties = this.userProfile.specialties;
+      //   }
+      // }
 
-      if (Object.keys(updatedProfile).length === 0) {
-        alert('Nenhuma alteração foi feita.');
-        return;
-      }
+      // if (Object.keys(updatedProfile).length === 0) {
+      //   alert('Nenhuma alteração foi feita.');
+      //   return;
+      // }
 
-      await EditProfileService.updateUserProfile({ ...updatedProfile, id: this.userProfile.id });
-      this.$router.push('/dashboard');
+      await EditProfileService.updateUserProfile(this.userProfile);
+      this.$router.push('/edit-profile');
       alert('Perfil atualizado com sucesso!');
     } catch (error: any) {
       console.error('Erro ao atualizar perfil do usuário:', error);

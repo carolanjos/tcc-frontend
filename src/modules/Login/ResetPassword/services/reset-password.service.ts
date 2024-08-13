@@ -7,9 +7,8 @@ class PasswordRecoveryService {
         try {
             await http.post(url, data);
         } catch (error) {
-            // Aqui você pode tratar o erro, por exemplo, exibindo uma mensagem de erro ou registrando-o.
             console.error('Erro ao redefinir a senha:', error);
-            throw error; // Opcional: você pode relançar o erro para ser tratado em outro lugar.
+            throw error; // Relança o erro para ser tratado no componente
         }
     }
 }

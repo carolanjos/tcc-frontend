@@ -53,12 +53,12 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/schedule',
-    name: 'ScheduleAppointment', 
+    name: 'ScheduleAppointment',
     component: () => import('@/modules/Schedule/Schedule.vue')
   },
   {
     path: '/list-consult',
-    name: 'ConsultationsList', 
+    name: 'ConsultationsList',
     component: () => import('@/modules/CheckScheduling/CheckScheduling.vue')
   },
   {

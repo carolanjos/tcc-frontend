@@ -17,6 +17,7 @@ class EditProfileService {
         },
       });
       return response.data;
+
     } catch (error) {
       console.error('Erro ao buscar perfil do usuário:', error);
       throw error;
@@ -40,7 +41,7 @@ class EditProfileService {
 
     try {
       // Substitui PATCH por PUT para realizar uma atualização completa do perfil do usuário
-      await http.put(`/user/profile/${id}`, userProfileData, {
+      await http.patch(`/user/profile/${id}`, userProfileData, {
         headers: {
           'Authorization': `Token ${token}`,
         },
