@@ -3,7 +3,7 @@ import ResetPasswordRequest from '@/modules/Login/ResetPassword/entities/reset-p
 
 class PasswordRecoveryService {
     static async resetPassword(uidb64: string, token: string, data: ResetPasswordRequest): Promise<void> {
-        const url = `/user/reset-password/${uidb64}/${token}/`;
+        const url = `/user/reset-password/Nw/${token}`;
         try {
             await http.post(url, data);
         } catch (error) {

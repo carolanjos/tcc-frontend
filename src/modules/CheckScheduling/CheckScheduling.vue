@@ -87,9 +87,10 @@ export default class CheckScheduling extends Vue {
   }
 
   openRescheduleModal(index: number) {
+    console.log('index:', index);
     this.selectedAppointmentId = this.appointments[index].id;
-    this.showRescheduleModal = true;
-  }
+    this.$router.push({ path: `/patient/reschedule/${this.selectedAppointmentId}` }); // Redireciona para a página de reagendamento
+}
 
   closeRescheduleModal() {
     this.showRescheduleModal = false;
