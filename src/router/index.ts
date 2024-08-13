@@ -19,7 +19,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
-    component: () => import('@/modules/Login/ForgotPassword/ForgotPassword.vue')
+    component: () => import('@/modules/ForgotPassword/ForgotPassword.vue')
   },
   {
     path: '/reset-password',
@@ -53,12 +53,12 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/schedule',
-    name: 'ScheduleAppointment', 
+    name: 'ScheduleAppointment',
     component: () => import('@/modules/Schedule/Schedule.vue')
   },
   {
     path: '/list-consult',
-    name: 'ConsultationsList', 
+    name: 'ConsultationsList',
     component: () => import('@/modules/CheckScheduling/CheckScheduling.vue')
   },
   {
