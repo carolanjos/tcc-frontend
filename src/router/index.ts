@@ -103,8 +103,8 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/reschedule',
-    name: 'RescheduleModal',
-    component: () => import('@/modules/CheckScheduling/RescheduleModal.vue')
+    name: 'Reschedule',
+    component: () => import('@/modules/CheckScheduling/CheckSchedulingDoctor.vue')
   }
 
 ]

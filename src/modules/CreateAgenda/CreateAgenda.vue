@@ -2,8 +2,8 @@
   <v-app id="inspire">
     <NavBar />
     <v-main>
-      <v-container fluid fill-height class="container">
-        <v-layout align-center justify-center>
+      <v-container fluid fill-height rounded class="container">
+        <v-layout align-center justify-center rounded>
           <v-flex xs12 sm8 md4>
             <v-card class="elevation-12 create-agenda-card">
               <v-card-title class="create-agenda-title">Criar Agenda</v-card-title>
@@ -168,6 +168,7 @@ export default class CreateAgenda extends Vue {
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
   text-align: center;
+  border-radius: 20px;
 }
 
 .create-calendar-button {
@@ -191,7 +192,17 @@ export default class CreateAgenda extends Vue {
   color: #1c7e83;
   font-size: 18px;
 }
-
+.create-agenda-title {
+  color: #1c7e83;
+  font-family: 'Montserrat';
+  text-align: center;
+  justify-items: center;
+  font-size: 35px;
+  margin-bottom: 20px;
+}
+.create-agenda-buttom {
+  color: #fff;
+}
 @media (max-width: 768px) {
   .create-calendar-card {
     width: 100%;

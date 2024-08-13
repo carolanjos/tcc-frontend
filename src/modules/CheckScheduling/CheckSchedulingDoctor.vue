@@ -17,7 +17,7 @@
                         <th class="text-center">Paciente</th>
                         <th class="text-center">Especialidade</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center">Presença</th>
+                        <th class="text-center">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -77,6 +77,8 @@ import DoctorCheck from '@/modules/CheckScheduling/entities/check-doctor.entity'
 })
 export default class AgendaList extends Vue {
   agendas: DoctorCheck[] = [];
+  rescheduleDialog = false;
+  selectedAppointmentId = 0;
 
   private checkSchedulingService = CheckDoctorService;
 
@@ -144,8 +146,6 @@ export default class AgendaList extends Vue {
 }
 </script>
 
-
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -191,6 +191,8 @@ export default class AgendaList extends Vue {
 .presence-btn.selected {
   background-color: #1c7e83;
   color: white;
+  justify-items: center;
+  align-items: center;
 }
 
 .mt-4 {

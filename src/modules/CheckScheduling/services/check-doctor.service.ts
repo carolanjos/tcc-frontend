@@ -107,6 +107,7 @@ class CheckDoctorService {
       throw error;
     }
   }
+
 }
 
 export default new CheckDoctorService();
