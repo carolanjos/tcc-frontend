@@ -5,10 +5,13 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import VTitle from './path/to/VTitle.vue';
-import '@mdi/font/css/materialdesignicons.css'
-
+import '@mdi/font/css/materialdesignicons.css';
+import Carousel from 'vue-carousel'; // 
+import Slide from 'vue-carousel';
 
 Vue.use(VueTheMask);
+Vue.component('Carousel');
+Vue.component('Slide');
 
 Vue.config.productionTip = false;
 

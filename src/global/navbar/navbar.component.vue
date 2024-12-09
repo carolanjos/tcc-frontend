@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="logo">
-      <img src="@/assets/navbar.png" alt="Logo" />
+      <img src="@/assets/navbar3.png" alt="Logo" />
     </div>
     <div class="nav-links">
       <button @click="inicialButton" class="nav-button">Home</button>
@@ -104,7 +104,7 @@ export default class NavBar extends Vue {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2EACB2;
+  background: linear-gradient(200deg, #2EACB2, #0C8B8B);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Montserrat';
   padding: 10px 10px;

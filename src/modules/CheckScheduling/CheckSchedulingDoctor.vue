@@ -6,22 +6,24 @@
         <v-layout align-center justify-center>
           <v-flex xs12 sm10 md8>
             <v-card class="elevation-12 agenda-card">
-              <v-card-title class="agenda-title">Lista de Pacientes Agendados</v-card-title>
+              <v-card-title class="agenda-title">
+                Lista de Pacientes Agendados
+              </v-card-title>
               <v-card-text>
                 <v-simple-table class="agenda-table">
                   <template v-slot:default>
                     <thead>
                       <tr>
-                        <th class="text-center">Data</th>
-                        <th class="text-center">Horário</th>
-                        <th class="text-center">Paciente</th>
-                        <th class="text-center">Especialidade</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Ações</th>
+                        <th class="text-center table-header">Data</th>
+                        <th class="text-center table-header">Horário</th>
+                        <th class="text-center table-header">Paciente</th>
+                        <th class="text-center table-header">Especialidade</th>
+                        <th class="text-center table-header">Status</th>
+                        <th class="text-center table-header">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(appointment, index) in agendas" :key="index">
+                      <tr v-for="(appointment, index) in agendas" :key="index" class="agenda-row" >
                         <td class="text-center">{{ appointment.date }}</td>
                         <td class="text-center">{{ appointment.start_time }}</td>
                         <td class="text-center">{{ appointment.name }}</td>
@@ -32,18 +34,20 @@
                         <td class="text-center">
                           <div class="presence-options">
                             <v-btn
+                              icon
+                              color="green"
                               :class="{ 'selected': appointment.status === 'realizada' }"
                               @click="markAsAttended(appointment.id, index)"
-                              class="presence-btn"
                             >
-                              Sim
+                              <v-icon>mdi-check-circle</v-icon>
                             </v-btn>
                             <v-btn
+                              icon
+                              color="red"
                               :class="{ 'selected': appointment.status === 'cancelado' }"
                               @click="markAsNotAttended(appointment.id, index)"
-                              class="presence-btn"
                             >
-                              Não
+                              <v-icon>mdi-close-circle</v-icon>
                             </v-btn>
                           </div>
                         </td>
@@ -51,7 +55,9 @@
                     </tbody>
                   </template>
                 </v-simple-table>
-                <v-btn color="#2EACB2" center class="btnPresence" @click="saveAttendances">Salvar Presenças</v-btn>
+                <div class="btn-container">
+                  <v-btn color="#2EACB2" class="btnPresence mt-4" @click="saveAttendances">Salvar</v-btn>
+                </div>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -108,7 +114,7 @@ export default class AgendaList extends Vue {
   }
 
   async markAsAttended(appointment_id: number, index: number) {
-    console.log(`Marking appointment ID ${appointment_id} as attended`); 
+    console.log(`Marking appointment ID ${appointment_id} as attended`);
     try {
       const response = await this.checkSchedulingService.markAppointmentAsDone(appointment_id);
       console.log('Full API response:', response); // Log da resposta completa
@@ -122,7 +128,7 @@ export default class AgendaList extends Vue {
   }
 
   async markAsNotAttended(appointment_id: number, index: number) {
-    console.log(`Marking appointment ID ${appointment_id} as not attended`); 
+    console.log(`Marking appointment ID ${appointment_id} as not attended`);
     try {
       const response = await this.checkSchedulingService.markAppointmentAsCanceled(appointment_id);
       console.log('Full API response:', response); // Log da resposta completa
@@ -147,40 +153,85 @@ export default class AgendaList extends Vue {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Montserrat';
 }
 
 .container {
-  padding: 20px;
+  padding: 40px;
 }
 
 .agenda-card {
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.v-application .text-center {
+  text-align: center !important;
+  font-size: 1rem !important;
 }
 
 .agenda-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #1c7e83;
+  font-size: 26px;
+  color: #2EACB2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat';
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .btnPresence {
   background-color: #2EACB2;
   color: white;
-  justify-items: center;
+  width: 20%;
+  height: 40%;
+  margin-bottom: 50px;
+  font-size: 16px;
+  border-radius: 25px;
+  margin-top: 10px;
 }
 
 .agenda-table {
   margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 20px;
+}
+
+.agenda-table th,
+.agenda-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 20px;
+}
+
+.table-header {
+  font-size: 24px; /* Ajuste o valor conforme necessário */
+}
+
+.agenda-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.agenda-row:hover {
+  background-color: #e3f2fd;
+  font-size: 25px;
 }
 
 .text-center {
   text-align: center;
+  font-size: 20px;
 }
 
 .presence-options {
@@ -191,8 +242,6 @@ export default class AgendaList extends Vue {
 .presence-btn.selected {
   background-color: #1c7e83;
   color: white;
-  justify-items: center;
-  align-items: center;
 }
 
 .mt-4 {
@@ -217,5 +266,18 @@ export default class AgendaList extends Vue {
 
 .status-not-done {
   color: gray;
+}
+
+.v-sheet.v-card {
+  border-radius: 40px;
+  padding: 30px;
+  font-family: 'Montserrat';
+  font-weight: 0;
+}
+
+.theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+  color: #2EACB2;
+  font-weight: 0;
+  font-family: 'Montserrat';
 }
 </style>

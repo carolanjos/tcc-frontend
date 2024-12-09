@@ -3,10 +3,10 @@
     <NavBar />
     <v-main>
       <v-container fluid class="container">
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm10 md8>
+        <v-row>
+          <v-col cols="12" sm="10" md="8" lg="10">
             <v-card class="elevation-12 consultation-card">
-              <v-card-title class="consultation-title">Lista de consultas agendadas</v-card-title>
+              <v-card-title class="consultation-title">Lista de Consultas Agendadas</v-card-title>
               <v-card-text>
                 <v-simple-table class="consultation-table">
                   <template v-slot:default>
@@ -17,7 +17,8 @@
                         <th class="text-center">Data</th>
                         <th class="text-center">Hora</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center">Ações</th>
+                        <th class="text-center">Reagendar</th>
+                        <th class="text-center">Cancelar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -26,11 +27,15 @@
                         <td class="text-center">{{ appointment.doctor }}</td>
                         <td class="text-center">{{ appointment.date }}</td>
                         <td class="text-center">{{ appointment.start_time }}</td>
-                        <td class="text-center" :class="statusClass(appointment.status)">{{ appointment.status }}</td>
+                        <td class="text-center" :class="statusClass(appointment.status)">
+                          {{ appointment.status }}
+                        </td>
                         <td class="text-center">
                           <v-btn icon @click="openRescheduleModal(index)">
                             <v-icon color="#2EACB2">mdi-calendar-edit</v-icon>
                           </v-btn>
+                        </td>
+                        <td class="text-center">
                           <v-btn icon @click="cancelAppointment(index)">
                             <v-icon color="#ff5252">mdi-cancel</v-icon>
                           </v-btn>
@@ -41,15 +46,15 @@
                 </v-simple-table>
               </v-card-text>
             </v-card>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
 
       <RescheduleModal
         :dialog.sync="showRescheduleModal"
         :appointmentId="selectedAppointmentId"
         @close="showRescheduleModal = false"
-        @reschedule="handleReschedule"
+        @reschedule="openRescheduleModal"
       />
 
     </v-main>
@@ -69,13 +74,18 @@ import RescheduleModal from '@/modules/CheckScheduling/RescheduleModal.vue';
   components: {
     NavBar,
     Footer,
-    RescheduleModal, // Registra o componente modal
+    RescheduleModal,
   }
 })
 export default class CheckScheduling extends Vue {
   appointments: CheckSchedulingEntity[] = [];
   showRescheduleModal = false;
   selectedAppointmentId = 0;
+
+  openRescheduleModal(index: number) {
+    const appointmentId = this.appointments[index].id;
+    this.$router.push({ name: 'RescheduleAppointment', params: { appointmentId: appointmentId.toString() } });
+  }
 
   async mounted() {
     try {
@@ -88,23 +98,17 @@ export default class CheckScheduling extends Vue {
   statusClass(status: string) {
     switch (status) {
       case 'Agendada':
-        return 'status-scheduled';
       case 'Remarcada':
-        return 'status-rescheduled';
+        return 'status-green'; // Verde para agendada e remarcada
       case 'Cancelada':
-        return 'status-canceled';
+        return 'status-red'; // Vermelho para cancelada
       case 'Realizada':
-        return 'status-done';
+        return 'status-done'; // Verde para realizada
       default:
         return '';
     }
   }
 
-  openRescheduleModal(index: number) {
-    console.log('index:', index);
-    this.selectedAppointmentId = this.appointments[index].id;
-    this.$router.push({ path: `/patient/reschedule/${this.selectedAppointmentId}` }); // Redireciona para a página de reagendamento
-}
 
   async handleReschedule({ appointmentId, newDate, newStartTime }: { appointmentId: number, newDate: string, newStartTime: string }) {
     try {
@@ -124,49 +128,63 @@ export default class CheckScheduling extends Vue {
     }
   }
 
-  cancelAppointment(index: number) {
-    alert(`Cancelar consulta de ${this.appointments[index].doctor}`);
-    // Adicione aqui a lógica para cancelar a consulta
+  async cancelAppointment(index: number) {
+    const appointmentId = this.appointments[index].id;
+    try {
+      const message = await CheckSchedulingService.cancelSchedule(appointmentId);
+      alert(message);
+
+      // Atualiza o status da consulta para 'Cancelada' na interface
+      this.appointments[index].status = 'Cancelada';
+    } catch (error) {
+      console.error('Erro ao cancelar a consulta:', error);
+      alert('Houve um erro ao tentar cancelar a consulta. Por favor, tente novamente.');
+    }
   }
 }
 </script>
 
 <style scoped>
-/* Adicione estilos aqui, se necessário */
-</style>
-
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
 * {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat';
 }
 
 .consultation-title {
-  color: #1c7e83;
-  font-weight: bold;
-  font-size: 30px;
+  font-size: 26px;
+  color: #149393;
   justify-content: center;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  padding: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-family: 'Montserrat';
+  margin-bottom: 12px;
 }
-
 
 .container {
   padding: 40px;
 }
 
-.agenda-card {
+.consultation-card {
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ajuste a largura do cartão */
+}
+
+.v-application .text-center {
+  text-align: center !important;
+  font-size: 1rem !important;
 }
 
 .agenda-title {
   font-size: 24px;
-  font-weight: bold;
-  color: #1c7e83;
+  color: #2EACB2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat';
 }
 
 .btnPresence {
@@ -189,7 +207,7 @@ export default class CheckScheduling extends Vue {
 }
 
 .presence-btn.selected {
-  background-color: #1c7e83;
+  background-color: #2EACB2;
   color: white;
 }
 
@@ -197,23 +215,50 @@ export default class CheckScheduling extends Vue {
   margin-top: 16px;
 }
 
-.status-scheduled {
-  color: blue;
+.status-green {
+  color: #28a745; /* Verde */
 }
 
-.status-rescheduled {
-  color: orange;
-}
-
-.status-canceled {
-  color: red;
+.status-red {
+  color: #ff5252; /* Vermelho */
 }
 
 .status-done {
-  color: green;
+  color: green; /* Verde para realizada */
 }
 
 .status-not-done {
-  color: gray;
+  color: gray; /* Cinza para status indefinido ou não realizado */
+}
+
+.v-sheet.v-card {
+  border-radius: 20px;
+  padding: 30px;
+  font-family: 'Montserrat';
+  font-weight: 0;
+  width: 110%;
+}
+
+.theme--light.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+  color: #149393;
+  font-weight: 0;
+  font-family: 'Montserrat';
+  text-transform: uppercase;
+}
+
+.container--fluid {
+  max-width: 500%; /* Ajuste a largura máxima do contêiner */
+}
+
+.v-card {
+  border-width: thin;
+  display: block;
+  max-width: 200%; /* Ajuste a largura máxima do cartão */
+  outline: none;
+  text-decoration: none;
+  transition-property: box-shadow, opacity;
+  overflow-wrap: break-word;
+  position: relative;
+  white-space: normal;
 }
 </style>

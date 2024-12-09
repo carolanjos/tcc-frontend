@@ -136,7 +136,7 @@ export default class EditProfile extends Vue {
       // }
 
       await EditProfileService.updateUserProfile(this.userProfile);
-      this.$router.push('/edit-profile');
+      this.$router.push('/');
       alert('Perfil atualizado com sucesso!');
     } catch (error: any) {
       console.error('Erro ao atualizar perfil do usuário:', error);
@@ -158,10 +158,10 @@ export default class EditProfile extends Vue {
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
   
   * {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat';
   }
   
   .container {
@@ -173,6 +173,7 @@ export default class EditProfile extends Vue {
     font-size: 35px;
     justify-content: center;
   }
+
   .edit-card {
     padding: 40px 20px;
     border-radius: 15px;

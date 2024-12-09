@@ -3,27 +3,19 @@ module.exports = {
   env: {
     node: true
   },
-  'extends': [
-    'plugin:vue/essential',
+  extends: [
+    'plugin:vue/vue3-essential',
+    '@vue/typescript/recommended',
     'eslint:recommended',
-    '@vue/typescript/recommended'
   ],
   parserOptions: {
     ecmaVersion: 2020
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
-  },
-  overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
-      ],
-      env: {
-        jest: true
-      }
-    }
-  ]
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    "no-unused-vars": "off",
+    "vue/no-deprecated-v-bind-sync": "off",
+    "no-useless-catch": "off"
+  }
 }

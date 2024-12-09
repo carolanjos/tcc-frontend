@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Home from '../global/home/Home.vue'
+import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
 
@@ -57,9 +58,24 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/modules/Schedule/Schedule.vue')
   },
   {
-    path: '/list-consult',
+    path: '/list-patient',
     name: 'ConsultationsList',
     component: () => import('@/modules/CheckScheduling/CheckScheduling.vue')
+  },
+  {
+    path: '/list-doctor',
+    name: 'ListDoctor',
+    component: () => import('@/modules/CheckScheduling/CheckSchedulingDoctor.vue')
+  },
+  {
+    path: '/list-admin',
+    name: 'ListPatient',
+    component: () => import('@/modules/Admin/Lists/ListPatient/ListPatient.vue')
+  },
+  {
+    path: '/list-users',
+    name: 'ListUsers',
+    component: () => import('@/modules/Admin/Lists/ListUsers/ListUsers.vue')
   },
   {
     path: '/success',
@@ -82,19 +98,9 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/global/home/components/home-value.component.vue')
   },
   {
-    path: '/home-infos',
-    name: 'HomeInfos',
-    component: () => import('@/global/home/components/home-infos.component.vue')
-  },
-  {
     path: '/features',
     name: 'Features',
     component: () => import('@/global/features/features.component.vue')
-  },
-  {
-    path: '/list-doctor',
-    name: 'ListDoctor',
-    component: () => import('@/modules/CheckScheduling/CheckSchedulingDoctor.vue')
   },
   {
     path: '/edit-profile',
@@ -105,8 +111,23 @@ const routes: Array<RouteConfig> = [
     path: '/reschedule',
     name: 'Reschedule',
     component: () => import('@/modules/CheckScheduling/CheckSchedulingDoctor.vue')
+  },
+  {
+    path: '/create-calendar',
+    name: 'CreateCalendar',
+    component: () => import('@/modules/CreateCalendar/CreateCalendar.vue')
+  },
+  {
+    path: '/test-feature', 
+    name: 'TestFeature',
+    component: () => import('@/modules/TestFeatures/test-features.component.vue')
+  },
+  {
+    path: '/reschedule/:appointmentId',
+    name: 'RescheduleAppointment',
+    component: () => import('@/modules/Reschedule/reschedule.component.vue'),
+    props: true,
   }
-
 ]
 
 const router = new VueRouter({

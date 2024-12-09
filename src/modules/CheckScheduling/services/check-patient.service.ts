@@ -51,6 +51,62 @@ class CheckPatientService {
       throw error;
     }
   }
+
+  // Método para reagendar uma consulta
+  public async rescheduleSchedule(appointmentId: number, newDate: string, newStartTime: string): Promise<string> {
+    const token = LocalStorageService.getItem('authToken');
+
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+
+    try {
+      const response = await http.post(
+        '/patient/reschedule',
+        {
+          appointment_id: appointmentId,
+          new_date: newDate,
+          new_start_time: newStartTime,
+        },
+        {
+          headers: {
+            'Authorization': `Token ${token}`,
+          },
+        }
+      );
+      return response.data.message;
+    } catch (error) {
+      console.error('Erro ao reagendar a consulta:', error);
+      throw error;
+    }
+  }
+
+  // Método para cancelar uma consulta
+  public async cancelSchedule(appointmentId: number): Promise<string> {
+    const token = LocalStorageService.getItem('authToken');
+
+    if (!token) {
+      throw new Error('No auth token found');
+    }
+
+    try {
+      const response = await http.post(
+        '/patient/cancel',
+        {
+          appointment_id: appointmentId,
+        },
+        {
+          headers: {
+            'Authorization': `Token ${token}`,
+          },
+        }
+      );
+      return response.data.message;
+    } catch (error) {
+      console.error('Erro ao cancelar a consulta:', error);
+      throw error;
+    }
+  }
 }
 
 export default new CheckPatientService();

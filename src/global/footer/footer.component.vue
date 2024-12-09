@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="5" class="footer-section">
-          <v-img src="@/assets/navbar.png" alt="Logo" max-width="250"/>
+          <v-img src="@/assets/navbar3.png" alt="Logo" max-width="250"/>
           <p class="company-info">
             <br />
             Tempo Bem Agendado, Saúde Bem Cuidada.<br />
@@ -47,7 +47,7 @@
     </v-container>
 
     <div class="footer-bottom">
-      <p>&copy; 2024 FMedicalTime. Todos os direitos reservados.</p>
+      <p>&copy; 2024 - MedicalTime. Todos os direitos reservados.</p>
     </div>
   </footer>
 </template>
@@ -89,7 +89,7 @@ export default class Footer extends Vue {
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 .footer {
-  background-color: #2EACB2;
+  background: linear-gradient(200deg, #2EACB2, #0C8B8B);
   color: #fff;
   font-family: 'Montserrat';
   padding: 25px 0;

@@ -12,15 +12,18 @@ class RegisterPatientService {
 
       // Salva a role "paciente" no LocalStorage
       localStorageService.setItem('role', 'paciente');
+      localStorageService.setItem('name', patientData.name);
 
-      // Salva os dados do paciente no LocalStorage
-      localStorageService.setItem('patientData', JSON.stringify(patientData));
+      // Salva os dados do paciente no LocalStorage como um objeto
+      localStorageService.setObject('patientData', patientData);
+
 
       // Exibe mensagem de sucesso
       alert('Paciente registrado com sucesso!');
-
+      
     } catch (error) {
       console.error('Erro ao registrar paciente:', error);
+      alert('Ocorreu um erro ao registrar o paciente. Por favor, tente novamente mais tarde.');
       throw error;
     }
   }
